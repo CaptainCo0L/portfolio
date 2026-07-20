@@ -8,11 +8,11 @@ const DATA = {
   wordmark: "Aswin Sunil",
 
   /* ---- Hero ---------------------------------------------- */
-  headline: "Systematic detection, applied to security.",
+  headline: "Three years reading the baseline. Now reading the alerts.",
   lede:
-    "Three years automating tests against Fortune 500 applications at Aspire Systems — 250+ regression cases, defect leakage held under 2%. Now aiming that same discipline at SOC work: alert triage, SIEM, network traffic analysis.",
+    "QA automation engineer at Aspire Systems — 250+ regression cases against Fortune 500 applications, defect leakage held under 2%. Anomaly hunting is the job I already do. The domain is changing, not the discipline.",
 
-  /* ---- Contact (used in nav, hero, contact, ⌘K) ----------- */
+  /* ---- Contact (used in nav, hero, contact) --------------- */
   contact: {
     email: "aswinsunil8089@gmail.com",
     linkedin: "https://www.linkedin.com/in/aswin-sunil-07189b188",
@@ -23,35 +23,25 @@ const DATA = {
   },
   status: "Open to SOC / security analyst roles",
 
-  /* ---- Hero terminal (right card) -------------------------
-     Each line: { prompt: true } renders a "$ " prefix.
-     "typed: true" on ONE line gives it the one-shot type-in.  */
-  terminal: {
-    filename: "candidate-scan.sh",
-    lines: [
-      { prompt: true, text: "whoami" },
-      { text: "aswin-sunil — qa automation → security" },
-      { blank: true },
-      { prompt: true, text: "./scan --self", typed: true },
-      { ok: true,   text: "selenium · testng · junit — 3 yrs" },
-      { ok: true,   text: "linux · windows vm · pcap capture" },
-      { scan: true, text: "siem · alert triage — in progress" },
-    ],
-    chip: "OPEN TO WORK",
-  },
-
-  /* ---- Stat strip (all figures from cv.md — keep them real) */
+  /* ---- Readout rail under the signal band ------------------
+     Figures come from the CV — keep them real.               */
   stats: [
-    { value: "3",    unit: "yrs",  label: "QA engineering, Fortune 500 apps" },
-    { value: "250+", unit: "",     label: "test cases automated" },
-    { value: "60%",  unit: "",     label: "manual effort cut" },
-    { value: "<2%",  unit: "",     label: "defect leakage rate" },
+    { value: "3",    unit: "yrs", label: "QA engineering, Fortune 500 apps" },
+    { value: "250+", unit: "",    label: "test cases automated" },
+    { value: "60%",  unit: "",    label: "manual effort cut" },
+    { value: "<2%",  unit: "",    label: "defect leakage rate" },
   ],
 
-  /* ---- The route in (numbered phases) --------------------- */
+  /* ---- The record -----------------------------------------
+     Each entry is an event on the signal band above.
+       flag:  true  → sodium, a turn in the story
+              false → mint, steady baseline work
+       mark:  0–1, where it sits on the band (left → right)   */
   phases: [
     {
-      num: "1.0",
+      year: "2022",
+      flag: false,
+      mark: 0.05,
       title: "Foundation",
       period: "2022 – 2023 · Aspire Systems",
       body:
@@ -59,7 +49,9 @@ const DATA = {
       tags: ["REST APIs", "Web apps", "Enterprise"],
     },
     {
-      num: "2.0",
+      year: "2023",
+      flag: false,
+      mark: 0.28,
       title: "Automation at scale",
       period: "2023 – 2026 · Aspire Systems",
       body:
@@ -67,24 +59,28 @@ const DATA = {
       tags: ["Selenium", "TestNG", "JUnit", "100+ modules"],
     },
     {
-      num: "3.0",
-      title: "The pivot",
-      period: "Offenso Academy · Blue Team event",
+      year: "2025",
+      flag: true,
+      mark: 0.71,
+      title: "First security work",
+      period: "Offenso Academy · Blue Team exercise",
       body:
         "Prepared the technical environment for a Blue Team cybersecurity exercise — stood up the Windows VM and the pcap packet-capture file used for network traffic analysis. First hands-on security work; it confirmed the direction.",
       tags: ["Windows VM", "pcap", "Blue Team"],
     },
     {
-      num: "4.0",
+      year: "Now",
+      flag: true,
+      mark: 0.94,
       title: "Target: SOC",
-      period: "Now",
+      period: "2026 · in progress",
       body:
-        "Hunting anomalies is the job I already do — the domain is changing, not the discipline. Building toward alert triage, SIEM operations and incident response, with an MCA (minor in AI) underneath it.",
+        "Building toward alert triage, SIEM operations and incident response, with an MCA (minor in AI) underneath it. The detection instinct transfers; the tooling is what I'm learning.",
       tags: ["Alert triage", "SIEM", "Incident response"],
     },
   ],
 
-  /* ---- Fieldwork (dark band) — add new projects here ------ */
+  /* ---- Fieldwork — add new security work here ------------- */
   projects: [
     {
       title: "Blue Team exercise — environment prep",
@@ -104,8 +100,9 @@ const DATA = {
     },
     */
   ],
+  fieldworkNote: "One entry, honestly. This section grows as the labs do.",
 
-  /* ---- Toolbox (spec-sheet rows) --------------------------- */
+  /* ---- Toolbox (spec-sheet rows) -------------------------- */
   skills: [
     { domain: "Test automation", items: "Selenium WebDriver · TestNG · JUnit", note: "daily driver, 3 yrs" },
     { domain: "Testing practice", items: "Regression · smoke · exploratory · test strategy", note: "enterprise release cycles" },
@@ -128,8 +125,8 @@ const DATA = {
     "BCA, minor in Banking — Chinmaya Vidhyapeet, 2020",
   ],
 
-  /* ---- Contact section ------------------------------------- */
+  /* ---- Contact section ------------------------------------ */
   contactHeading: "Hiring for a SOC seat?",
   contactBody:
-    "Email is the fastest way to reach me. Based in Ernakulam (IST) — open to on-site, hybrid and remote. For roles in Europe, I'll need visa sponsorship and I say so upfront.",
+    "Email is the fastest way to reach me. Based in Ernakulam (IST) — open to on-site, hybrid and remote. For roles in Europe I need visa sponsorship, and I'd rather say that now than in week three.",
 };

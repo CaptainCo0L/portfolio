@@ -11,6 +11,15 @@ A single-page static portfolio. No build step, no dependencies.
 - **Change the headline, stats, phases, contact info** → edit the matching field at the top.
 - The stat figures come from the CV — keep them real.
 
+### The signal band
+
+The hero trace is generated from `phases`. Each phase carries two extra fields:
+
+- `flag: true` draws a tall amber bar (a turn in the story); `false` draws a shorter mint one (steady baseline work). The same distinction labels the entry in the record below.
+- `mark:` is where it sits on the band, `0` (far left) to `1` (far right).
+
+Add a phase and a new bar appears; clicking it scrolls to that entry.
+
 ## CV download
 
 Drop your CV PDF at `assets/Aswin-Sunil-CV.pdf` (or change `contact.cv` in `data.js` to another path/URL).
@@ -37,6 +46,6 @@ Netlify/Vercel also work — point them at the folder, no build command.
 |------|------------|
 | `data.js` | **All content — edit this one** |
 | `index.html` | Page structure |
-| `styles.css` | Design (Hallmark · Cobalt theme) |
+| `styles.css` | Design (Baseline & Anomaly) |
 | `tokens.css` | Design tokens (colours, type, spacing) |
-| `app.js` | Rendering + Ctrl/⌘ K palette (rarely needs edits) |
+| `app.js` | Rendering + the signal band (rarely needs edits) |

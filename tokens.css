@@ -1,48 +1,38 @@
-/* Hallmark · tokens — theme: Cobalt
- * paper-band: light (L 98.5%) · display-style: grotesk-sans · accent-hue: cool (256)
+/* Baseline & Anomaly — design tokens
+ * Ground: petrol (chromatic dark blue-green, never flat black).
+ * Two signals only: sodium amber = flagged event, mint = nominal.
+ * Warm bone type on a cool ground — that tension is the whole palette.
  */
 :root {
-  /* Colour — cool engineered near-white, one electric cobalt signal */
-  --color-paper:         oklch(98.5% 0.004 250);
-  --color-paper-2:       oklch(96.4% 0.006 250);
-  --color-rule:          oklch(90% 0.008 252);
-  --color-rule-2:        oklch(82% 0.014 253);
-  --color-ink:           oklch(24% 0.02 258);
-  --color-ink-2:         oklch(34% 0.018 257);
-  --color-muted:         oklch(45% 0.02 257);
-  --color-graphite:      oklch(22% 0.016 260);
-  --color-graphite-2:    oklch(26% 0.016 260);
-  --color-graphite-rule: oklch(34% 0.016 258);
-  --color-on-dark:       oklch(93% 0.006 250);
-  --color-on-dark-muted: oklch(72% 0.012 252);
-  --color-accent:        oklch(58% 0.2 256);   /* signal — rings, underlines, marks */
-  --color-accent-deep:   oklch(50% 0.19 256);  /* text-carrying fills (4.5:1 w/ accent-ink) */
-  --color-accent-deeper: oklch(44% 0.18 256);  /* fill hover */
-  --color-accent-bright: oklch(70% 0.16 256);  /* accent text on graphite */
-  --color-accent-ink:    oklch(98% 0.008 250);
-  --color-accent-soft:   oklch(94% 0.02 254);
-  --color-focus:         oklch(58% 0.2 256);
-  --color-paper-glass:   oklch(98.5% 0.004 250 / 0.85);
-  --color-scrim:         oklch(24% 0.02 258 / 0.4);
-  --shadow-lift:         0 1px 2px oklch(24% 0.02 258 / 0.05);
+  /* Colour */
+  --petrol:      #0f2129;  /* page ground */
+  --petrol-2:    #16303a;  /* raised surface: cards, table stripes */
+  --petrol-3:    #1e404c;  /* hairlines, bar baseline */
+  --rule:        #244c59;  /* borders */
+  --bone:        #ede7dc;  /* primary text */
+  --bone-dim:    #c3c0b7;  /* secondary text */
+  --haze:        #7e9aa3;  /* tertiary / mono labels */
+  --sodium:      #f0a63c;  /* flagged — anomalies, marks, the one loud colour */
+  --sodium-deep: #c47d1e;  /* sodium on light / pressed */
+  --mint:        #6fbfa6;  /* nominal — baseline, "ok" states */
+  --focus:       #f0a63c;
 
-  /* Type — Space Grotesk display · Inter body · JetBrains Mono labels/code */
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body:    "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+  /* Type — Bricolage display · Newsreader body · IBM Plex Mono data */
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body:    "Newsreader", Georgia, "Times New Roman", serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
 
-  /* Scale — 1.25 major third */
-  --text-xs:   0.8rem;
+  /* Scale */
+  --text-xs:   0.75rem;
   --text-sm:   0.875rem;
-  --text-base: 1rem;
+  --text-base: 1.0625rem;
   --text-md:   1.25rem;
-  --text-lg:   1.5625rem;
-  --text-xl:   1.9531rem;
-  --text-2xl:  2.4414rem;
-  --text-display-s: clamp(1.9rem, 2.6vw + 0.9rem, 2.9rem);
-  --text-display:   clamp(2.4rem, 4vw + 1rem, 4.4rem);
+  --text-lg:   1.5rem;
+  --text-xl:   2rem;
+  --text-h2:   clamp(2rem, 3.2vw + 1rem, 3.25rem);
+  --text-hero: clamp(2.6rem, 6.2vw + 0.5rem, 6rem);
 
-  /* Space — 4pt scale */
+  /* Space — 4pt */
   --space-2xs: 0.25rem;
   --space-xs:  0.5rem;
   --space-sm:  0.75rem;
@@ -50,25 +40,20 @@
   --space-lg:  1.5rem;
   --space-xl:  2.5rem;
   --space-2xl: 4rem;
-  --space-3xl: 6rem;
+  --space-3xl: 6.5rem;
   --space-4xl: 9rem;
 
   /* Motion */
-  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-micro: 120ms;
-  --dur-short: 220ms;
-  --dur-long:  420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 130ms;
+  --dur-short: 260ms;
+  --dur-long:  520ms;
 
-  /* Structure — "drawn with a ruler" */
-  --radius-btn:  6px;
-  --radius-card: 10px;
-  --rule: 1px solid var(--color-rule);
+  /* Structure */
+  --radius: 2px;          /* near-square: instrument, not app */
+  --hairline: 1px solid var(--rule);
+  --measure: 62ch;
 
-  /* Z scale */
-  --z-base: 1;
-  --z-raised: 10;
+  /* Z */
   --z-sticky: 200;
-  --z-modal: 400;
 }

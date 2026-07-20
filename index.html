@@ -3,142 +3,127 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Aswin Sunil — QA automation → security</title>
-  <meta name="description" content="QA/test automation engineer transitioning into SOC and security analyst work. Three years on Fortune 500 applications; 250+ automated test cases; Blue Team hands-on experience." />
+  <title>Aswin Sunil — QA automation → SOC</title>
+  <meta name="description" content="QA/test automation engineer moving into SOC and security analyst work. Three years on Fortune 500 applications, 250+ automated test cases, Blue Team hands-on experience." />
+  <meta name="theme-color" content="#0f2129" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- Nav — N13: bordered bar, brand + search pill + links + one cobalt button -->
+  <a class="skip" href="#main">Skip to content</a>
+
   <header class="nav">
     <div class="wrap nav__inner">
-      <a class="nav__brand" href="#top" id="brand">Aswin Sunil</a>
-      <button class="searchpill" id="searchpill" aria-label="Search this page (Ctrl K)">
-        <span class="searchpill__text">Jump to…</span>
-        <kbd>Ctrl</kbd><kbd>K</kbd>
-      </button>
+      <a class="nav__brand" href="#top">Aswin Sunil</a>
+      <p class="nav__status" id="nav-status"></p>
       <nav class="nav__links" aria-label="Primary">
-        <a class="nav__link" href="#route">Story</a>
-        <a class="nav__link" href="#fieldwork">Fieldwork</a>
-        <a class="nav__link" href="#toolbox">Toolbox</a>
-        <a class="btn btn--primary" id="nav-email" href="#contact">Email me</a>
+        <a href="#record">Record</a>
+        <a href="#fieldwork">Fieldwork</a>
+        <a href="#toolbox">Toolbox</a>
+        <a class="btn" id="nav-email" href="#contact">Email me</a>
       </nav>
     </div>
   </header>
 
-  <main id="top">
+  <main id="main">
+    <div id="top"></div>
 
-    <!-- Hero — H2 split diptych: title left, terminal proof right -->
-    <section class="hero wrap">
-      <h1 class="hero__headline" id="hero-headline"></h1>
-      <div>
-        <p class="hero__lede" id="hero-lede"></p>
-        <p class="hero__status mono-label" id="hero-status"></p>
-        <div class="hero__actions">
-          <a class="btn btn--outline" id="hero-cv" href="#" download>Download CV</a>
-          <a class="link-quiet" id="hero-linkedin" href="#" rel="me noopener" target="_blank">LinkedIn ↗</a>
-        </div>
-      </div>
-      <div class="term" role="img" aria-label="Terminal readout summarising Aswin's profile">
-        <div class="term__bar">
-          <span id="term-filename"></span>
-          <span class="term__chip" id="term-chip"></span>
-        </div>
-        <div class="term__body" id="term-body"></div>
-      </div>
-    </section>
-
-    <!-- Stat strip — T4, every figure from the CV -->
-    <div class="wrap">
-      <section class="stats tnum" id="stats" aria-label="Career figures"></section>
-    </div>
-
-    <!-- The route in — F4 numbered phases -->
-    <section class="section wrap" id="route">
-      <div class="section__head reveal">
-        <h2>The route in.</h2>
-        <p>Not a cold start — a redirection of the same discipline.</p>
-      </div>
-      <ol class="steps" id="phases"></ol>
-    </section>
-
-    <!-- Fieldwork — the one dark band; projects render from data.js -->
-    <section class="field section" id="fieldwork">
+    <!-- Hero: thesis, then the signal band that proves it -->
+    <section class="hero">
       <div class="wrap">
-        <div class="section__head reveal">
-          <h2>Fieldwork.</h2>
-          <p>Hands-on security work — this list grows as the labs do.</p>
+        <h1 class="hero__headline" id="hero-headline"></h1>
+        <div class="hero__row">
+          <p class="hero__lede" id="hero-lede"></p>
+          <div class="hero__actions">
+            <a class="btn" id="hero-cv" href="#" download>Download CV</a>
+            <a class="quiet" id="hero-linkedin" href="#" rel="me noopener" target="_blank">LinkedIn</a>
+          </div>
         </div>
-        <div class="field__grid" id="projects"></div>
-        <p class="field__note">$ ls fieldwork/ — new entries are added in data.js</p>
+      </div>
+
+      <!-- Signature: the career as a signal trace -->
+      <figure class="band">
+        <figcaption class="band__cap">
+          <span class="mono">career trace · 2022 → now</span>
+          <span class="mono band__key">
+            <i class="key key--base"></i> baseline
+            <i class="key key--flag"></i> flagged
+          </span>
+        </figcaption>
+        <div class="band__plot" id="band" aria-label="Career trace. Flagged events link to the record below."></div>
+      </figure>
+
+      <div class="wrap">
+        <dl class="readout" id="stats"></dl>
       </div>
     </section>
 
-    <!-- Toolbox — F3 spec sheet + credentials -->
+    <!-- The record -->
+    <section class="section wrap" id="record">
+      <div class="head reveal">
+        <h2>The record.</h2>
+        <p>Two years of steady baseline, then the turn. Both matter — the baseline is where the pattern-reading was built.</p>
+      </div>
+      <ol class="record" id="phases"></ol>
+    </section>
+
+    <!-- Fieldwork -->
+    <section class="section wrap" id="fieldwork">
+      <div class="head reveal">
+        <h2>Fieldwork.</h2>
+        <p>Hands-on security work, listed as it happens.</p>
+      </div>
+      <div class="cases" id="projects"></div>
+      <p class="cases__note mono" id="fieldwork-note"></p>
+    </section>
+
+    <!-- Toolbox -->
     <section class="section wrap" id="toolbox">
-      <div class="section__head reveal">
+      <div class="head reveal">
         <h2>Toolbox.</h2>
       </div>
-      <table class="spec" id="skills"></table>
-      <div class="creds">
+      <table class="spec">
+        <caption class="sr-only">Skills by domain, with current depth</caption>
+        <tbody id="skills"></tbody>
+      </table>
+      <div class="creds reveal">
         <div>
-          <span class="mono-label">Education</span>
+          <h3 class="mono">Education</h3>
           <ul id="education"></ul>
         </div>
         <div>
-          <span class="mono-label">Certifications</span>
+          <h3 class="mono">Certifications</h3>
           <ul id="certs"></ul>
         </div>
       </div>
     </section>
 
     <!-- Contact -->
-    <section class="contact section wrap" id="contact">
+    <section class="section wrap contact" id="contact">
       <div class="reveal">
         <h2 id="contact-heading"></h2>
-        <p id="contact-body"></p>
-        <div class="contact__actions">
-          <a class="btn btn--primary" id="contact-email" href="#">Email me</a>
-          <a class="btn btn--outline" id="contact-cv" href="#" download>Download CV</a>
-          <a class="link-quiet" id="contact-linkedin" href="#" rel="me noopener" target="_blank">LinkedIn ↗</a>
+        <p class="contact__body" id="contact-body"></p>
+        <div class="hero__actions">
+          <a class="btn" id="contact-email" href="#">Email me</a>
+          <a class="btn btn--ghost" id="contact-cv" href="#" download>Download CV</a>
+          <a class="quiet" id="contact-linkedin" href="#" rel="me noopener" target="_blank">LinkedIn</a>
         </div>
-        <p class="contact__meta mono-label" id="contact-meta"></p>
+        <p class="contact__meta mono" id="contact-meta"></p>
       </div>
     </section>
-
   </main>
 
-  <!-- Footer — Ft2 inline single line -->
-  <footer class="foot-line">
-    <div class="wrap">
-      <p id="foot"></p>
-    </div>
+  <footer class="foot">
+    <div class="wrap"><p class="mono" id="foot"></p></div>
   </footer>
 
-  <!-- ⌘K command palette -->
-  <div class="cmdk" id="cmdk" aria-hidden="true">
-    <div class="cmdk__backdrop" data-close></div>
-    <div class="cmdk__panel" role="dialog" aria-modal="true" aria-label="Jump to a section or action">
-      <div class="cmdk__field">
-        <input id="cmdk-input" type="text" placeholder="Where to?" autocomplete="off" />
-        <kbd>esc</kbd>
-      </div>
-      <div class="cmdk__results" id="cmdk-results"></div>
-      <div class="cmdk__foot">
-        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-        <span><kbd>↵</kbd> open</span>
-        <span><kbd>esc</kbd> close</span>
-      </div>
-    </div>
-  </div>
-
   <noscript>
-    <div class="wrap" style="padding-block: 2rem;">
-      <p>This page renders its content with JavaScript. With it disabled, the short version:
-      Aswin Sunil — QA automation engineer (3 yrs, Aspire Systems) moving into SOC/security analyst work.
+    <div class="wrap" style="padding-block:2rem">
+      <p>This page renders its content with JavaScript. The short version: Aswin Sunil — QA automation
+      engineer (3 yrs, Aspire Systems) moving into SOC / security analyst work.
       Email: aswinsunil8089@gmail.com</p>
     </div>
   </noscript>
