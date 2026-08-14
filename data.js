@@ -10,7 +10,7 @@ const DATA = {
   /* ---- Hero ---------------------------------------------- */
   headline: "Three years reading the baseline. Now reading the alerts.",
   lede:
-    "Three years of QA automation at Aspire Systems — 250+ regression cases against Fortune 500 applications, defect leakage held under 2%. Now seven labs into a security program at Offenso Academy. Anomaly hunting is the job I already do. The domain is changing, not the discipline.",
+    "Three years of QA automation at Aspire Systems — 250+ regression cases against Fortune 500 applications, defect leakage held under 2%. Now seven labs into a security program at Offenso Academy, with a Wazuh SIEM running at home. Anomaly hunting is the job I already do. The domain is changing, not the discipline.",
 
   /* ---- Contact (used in nav, hero, contact) --------------- */
   contact: {
@@ -83,6 +83,14 @@ const DATA = {
   /* ---- Fieldwork — add new security work here ------------- */
   projects: [
     {
+      title: "Home lab — Wazuh SIEM",
+      org: "Self-hosted · ongoing",
+      body:
+        "Wazuh 4.14.6 deployed and ingesting from Windows Server and Windows 10 endpoints, with a Kali box generating the traffic worth alerting on. Reading your own alerts is a different skill from reading someone else's slides.",
+      tags: ["Wazuh", "SIEM", "Log ingestion", "Kali"],
+      link: "",
+    },
+    {
       title: "Security program labs — 7 completed",
       org: "Offenso Academy · Jun 2026 – present",
       body:
@@ -114,7 +122,8 @@ const DATA = {
   skills: [
     { domain: "Test automation", items: "Selenium WebDriver · TestNG · JUnit", note: "daily driver, 3 yrs" },
     { domain: "Testing practice", items: "Regression · smoke · exploratory · test strategy", note: "enterprise release cycles" },
-    { domain: "Security",        items: "SOC fundamentals · packet/network traffic analysis · Windows VM environments", note: "7 labs, Offenso Academy" },
+    { domain: "Security",        items: "Wazuh SIEM · log ingestion · SOC fundamentals · packet/network traffic analysis", note: "self-hosted lab + 7 labs, Offenso" },
+    { domain: "Lab",             items: "Kali · Windows Server · Windows 10 · Windows VM environments", note: "attacker and target hosts" },
     { domain: "Systems",         items: "Linux · Windows", note: "" },
     { domain: "Languages",       items: "Java · Python · C++ · JavaScript · HTML", note: "" },
     { domain: "Data",            items: "MySQL · PhpMyAdmin", note: "" },
