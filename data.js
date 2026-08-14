@@ -91,6 +91,14 @@ const DATA = {
       link: "",
     },
     {
+      title: "Boot2root machines — 6 rooted",
+      org: "Home lab · Jul–Aug 2026",
+      body:
+        "CryptoBank, GreenOptic, HF2019-Linux, Metasploitable, pwnlab and SickOS, all rooted on the same lab network Wazuh is watching. Attacking a box teaches you what the alert should have looked like.",
+      tags: ["Privilege escalation", "Enumeration", "Kali"],
+      link: "",
+    },
+    {
       title: "Security program labs — 7 completed",
       org: "Offenso Academy · Jun 2026 – present",
       body:
@@ -116,13 +124,14 @@ const DATA = {
     },
     */
   ],
-  fieldworkNote: "Small and honest. This section grows as the labs do.",
+  fieldworkNote: "Both sides of the wire. This section grows as the labs do.",
 
   /* ---- Toolbox (spec-sheet rows) -------------------------- */
   skills: [
     { domain: "Test automation", items: "Selenium WebDriver · TestNG · JUnit", note: "daily driver, 3 yrs" },
     { domain: "Testing practice", items: "Regression · smoke · exploratory · test strategy", note: "enterprise release cycles" },
     { domain: "Security",        items: "Wazuh SIEM · log ingestion · SOC fundamentals · packet/network traffic analysis", note: "self-hosted lab + 7 labs, Offenso" },
+    { domain: "Offensive practice", items: "Privilege escalation · enumeration · exploitation", note: "6 boot2root machines rooted" },
     { domain: "Lab",             items: "Kali · Windows Server · Windows 10 · Windows VM environments", note: "attacker and target hosts" },
     { domain: "Systems",         items: "Linux · Windows", note: "" },
     { domain: "Languages",       items: "Java · Python · C++ · JavaScript · HTML", note: "" },
