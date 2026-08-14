@@ -10,7 +10,7 @@ const DATA = {
   /* ---- Hero ---------------------------------------------- */
   headline: "Three years reading the baseline. Now reading the alerts.",
   lede:
-    "QA automation engineer at Aspire Systems — 250+ regression cases against Fortune 500 applications, defect leakage held under 2%. Anomaly hunting is the job I already do. The domain is changing, not the discipline.",
+    "Three years of QA automation at Aspire Systems — 250+ regression cases against Fortune 500 applications, defect leakage held under 2%. Now seven labs into a security program at Offenso Academy. Anomaly hunting is the job I already do. The domain is changing, not the discipline.",
 
   /* ---- Contact (used in nav, hero, contact) --------------- */
   contact: {
@@ -72,16 +72,24 @@ const DATA = {
       year: "Now",
       flag: true,
       mark: 0.94,
-      title: "Target: SOC",
-      period: "2026 · in progress",
+      title: "Retraining for SOC",
+      period: "Jun 2026 – Nov 2026 · Offenso Academy",
       body:
-        "Building toward alert triage, SIEM operations and incident response, with an MCA (minor in AI) underneath it. The detection instinct transfers; the tooling is what I'm learning.",
-      tags: ["Alert triage", "SIEM", "Incident response"],
+        "Five-month cybersecurity program, in progress. Seven labs done so far across SOC fundamentals and network packet analysis. The detection instinct transferred; the tooling is what I'm here to learn.",
+      tags: ["SOC fundamentals", "Packet analysis", "7 labs"],
     },
   ],
 
   /* ---- Fieldwork — add new security work here ------------- */
   projects: [
+    {
+      title: "Security program labs — 7 completed",
+      org: "Offenso Academy · Jun 2026 – present",
+      body:
+        "Seven hands-on labs so far in a five-month program, covering SOC fundamentals and network packet analysis. Ongoing — this entry gets split into individual labs as the write-ups go up.",
+      tags: ["SOC fundamentals", "Packet analysis"],
+      link: "",
+    },
     {
       title: "Blue Team exercise — environment prep",
       org: "Offenso Academy",
@@ -100,13 +108,13 @@ const DATA = {
     },
     */
   ],
-  fieldworkNote: "One entry, honestly. This section grows as the labs do.",
+  fieldworkNote: "Small and honest. This section grows as the labs do.",
 
   /* ---- Toolbox (spec-sheet rows) -------------------------- */
   skills: [
     { domain: "Test automation", items: "Selenium WebDriver · TestNG · JUnit", note: "daily driver, 3 yrs" },
     { domain: "Testing practice", items: "Regression · smoke · exploratory · test strategy", note: "enterprise release cycles" },
-    { domain: "Security",        items: "pcap analysis · Windows VM environments", note: "hands-on via Blue Team prep" },
+    { domain: "Security",        items: "SOC fundamentals · packet/network traffic analysis · Windows VM environments", note: "7 labs, Offenso Academy" },
     { domain: "Systems",         items: "Linux · Windows", note: "" },
     { domain: "Languages",       items: "Java · Python · C++ · JavaScript · HTML", note: "" },
     { domain: "Data",            items: "MySQL · PhpMyAdmin", note: "" },
