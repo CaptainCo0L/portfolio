@@ -99,6 +99,14 @@ const DATA = {
       link: "",
     },
     {
+      title: "Web exploitation — CyLab Academy & picoCTF",
+      org: "Self-directed · Jul 2026",
+      body:
+        "Seven challenges on CMU CyLab Academy's web track: request interception in Burp, source and include-file disclosure, content discovery, path traversal and 403 bypass, and client-side auth bypass including JWT forging. Plus recursive directory enumeration against picoCTF targets with feroxbuster, and steghide/stegseek on the steganography side. Every one of these leaves something in a log worth alerting on.",
+      tags: ["Burp Suite", "Path traversal", "JWT", "feroxbuster", "steghide"],
+      link: "",
+    },
+    {
       title: "Security program labs — 7 completed",
       org: "Offenso Academy · Jun 2026 – present",
       body:
@@ -132,6 +140,7 @@ const DATA = {
     { domain: "Testing practice", items: "Regression · smoke · exploratory · test strategy", note: "enterprise release cycles" },
     { domain: "Security",        items: "Wazuh SIEM · log ingestion · SOC fundamentals · packet/network traffic analysis", note: "self-hosted lab + 7 labs, Offenso" },
     { domain: "Offensive practice", items: "Privilege escalation · enumeration · exploitation", note: "6 boot2root machines rooted" },
+    { domain: "Web exploitation", items: "Burp Suite · path traversal · content discovery · client-side auth bypass · feroxbuster", note: "CyLab Academy web track, 7 solved" },
     { domain: "Lab",             items: "Kali · Windows Server · Windows 10 · Windows VM environments", note: "attacker and target hosts" },
     { domain: "Systems",         items: "Linux · Windows", note: "" },
     { domain: "Languages",       items: "Java · Python · C++ · JavaScript · HTML", note: "" },
