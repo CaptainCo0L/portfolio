@@ -10,7 +10,11 @@
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;  /* every tappable has its own :active */
+  -webkit-text-size-adjust: 100%;            /* no font inflation in landscape */
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -32,6 +36,15 @@ h1, h2, h3 {
 }
 
 a { color: inherit; }
+
+/* Phones: taps fire without the double-tap wait, and controls don't select
+   their label on long-press. Body text stays selectable. */
+a, button { touch-action: manipulation; }
+.btn, .chip, .nav__links a, .nav__brand {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
 p { text-wrap: pretty; }
 ul, ol { list-style: none; padding: 0; }
 
@@ -40,9 +53,11 @@ ul, ol { list-style: none; padding: 0; }
   outline-offset: 3px;
 }
 
+/* Gutters grow to clear the notch in landscape (viewport-fit=cover is on). */
 .wrap {
-  width: min(100% - 2.5rem, 70rem);
+  width: min(100%, 72.5rem);
   margin-inline: auto;
+  padding-inline: max(1.25rem, env(safe-area-inset-left)) max(1.25rem, env(safe-area-inset-right));
 }
 
 /* Small secondary label — the quiet voice for captions and metadata */
@@ -105,6 +120,7 @@ ul, ol { list-style: none; padding: 0; }
 /* ---------- Nav: a translucent material, content scrolls under ---------- */
 .nav {
   position: sticky; top: 0; z-index: var(--z-sticky);
+  padding-top: env(safe-area-inset-top, 0px);
   background: var(--material);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   backdrop-filter: blur(20px) saturate(180%);
@@ -458,7 +474,7 @@ ul, ol { list-style: none; padding: 0; }
 /* ---------- Footer ---------- */
 .foot {
   border-top: var(--hairline);
-  padding-block: var(--space-lg);
+  padding-block: var(--space-lg) calc(var(--space-lg) + env(safe-area-inset-bottom, 0px));
 }
 .foot p { font-size: var(--text-xs); }
 
