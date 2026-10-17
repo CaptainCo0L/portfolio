@@ -30,6 +30,26 @@ test("isStale ignores CRLF vs LF differences", () => {
   assert.equal(isStale("a\nc\n", fresh), true);
 });
 
+test("every hidden-until-JS state in styles.css is scoped under .js", () => {
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+  const hiding = rules.filter(([, , body]) => /opacity:\s*0\s*[;}]|opacity:\s*0$|scaleY\(0\)/m.test(body.trim()));
+  assert.ok(hiding.length > 0, "expected some hidden states to check");
+  for (const [, selector] of hiding) {
+    for (const s of selector.split(",").map((x) => x.trim())) {
+      assert.match(s, /^\.js /, `"${s}" hides content without JS`);
+    }
+  }
+});
+
+test("index.html marks JS before CSS loads and no longer needs data.js", () => {
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const js = html.indexOf('document.documentElement.classList.add("js")');
+  assert.ok(js > -1 && js < html.indexOf('href="styles.css"'), "inline .js script before the stylesheet");
+  assert.doesNotMatch(html, /<script src="data\.js">/);
+  assert.doesNotMatch(html, /<noscript>/);
+});
+
 test("the built index.html carries the content without JavaScript", () => {
   const data = loadData();
   const html = buildIndex(readFileSync(new URL("../index.html", import.meta.url), "utf8"), data);

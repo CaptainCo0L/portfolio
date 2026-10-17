@@ -4,6 +4,8 @@
 //
 //   node scripts/shoot.mjs --url http://localhost:8000/ --out qa/after [--reduced-motion]
 //
+//   node scripts/shoot.mjs --url http://localhost:8000/ --out qa/nojs --no-js
+//
 // Writes <out>/<w>x<h>-<scheme>.png (viewport) and <out>/<w>x<h>-<scheme>-full.png
 // (whole page), and prints scrollWidth per shot so horizontal overflow shows up.
 
@@ -27,8 +29,9 @@ const arg = (name, fallback) => {
 const url = arg("--url", "http://localhost:8000/");
 const out = arg("--out");
 const reducedMotion = process.argv.includes("--reduced-motion");
+const noJs = process.argv.includes("--no-js");
 if (!out) {
-  console.error("usage: node scripts/shoot.mjs --url <url> --out <dir> [--reduced-motion]");
+  console.error("usage: node scripts/shoot.mjs --url <url> --out <dir> [--reduced-motion] [--no-js]");
   process.exit(2);
 }
 mkdirSync(out, { recursive: true });
@@ -75,6 +78,8 @@ const send = (method, params = {}) =>
   });
 
 await send("Page.enable");
+// Page scripts off; Runtime.evaluate below still works for measuring.
+if (noJs) await send("Emulation.setScriptExecutionDisabled", { value: true });
 try {
   for (const vp of VIEWPORTS) {
     for (const scheme of SCHEMES) {
@@ -101,11 +106,14 @@ try {
       writeFileSync(`${base}.png`, Buffer.from(shot.data, "base64"));
 
       // Scroll through once so one-shot reveals fire, then capture the whole page.
-      await send("Runtime.evaluate", {
-        expression: "(async()=>{for(let y=0;y<document.documentElement.scrollHeight;y+=400){scrollTo(0,y);await new Promise(r=>setTimeout(r,40))}scrollTo(0,0)})()",
-        awaitPromise: true,
-      });
-      await sleep(700);
+      // (Skipped without JS: there are no reveals, and page timers never fire.)
+      if (!noJs) {
+        await send("Runtime.evaluate", {
+          expression: "(async()=>{for(let y=0;y<document.documentElement.scrollHeight;y+=400){scrollTo(0,y);await new Promise(r=>setTimeout(r,40))}scrollTo(0,0)})()",
+          awaitPromise: true,
+        });
+        await sleep(700);
+      }
       const full = await send("Page.captureScreenshot", {
         format: "png",
         captureBeyondViewport: true,

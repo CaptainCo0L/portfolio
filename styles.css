@@ -268,15 +268,16 @@ ul, ol { list-style: none; padding: 0; }
 .flagbtn:first-of-type .flag__label { left: 0; transform: none; }
 .flagbtn:last-of-type  .flag__label { left: auto; right: 0; transform: none; }
 
-/* Draw-in: bars grow from the baseline, left to right */
-.band--draw .tick,
-.band--draw .flagbtn { transform: scaleY(0); }
+/* Draw-in: bars grow from the baseline, left to right.
+   Hidden only when JS is running, so the trace is always there without it. */
+.js .band__plot:not(.band--in) .tick,
+.js .band__plot:not(.band--in) .flagbtn { transform: scaleY(0); }
 .band--in .tick,
 .band--in .flagbtn {
   transform: scaleY(1);
   transition: transform 420ms var(--ease-out) var(--d, 0ms);
 }
-.band--draw .flag__label { opacity: 0; }
+.js .band__plot:not(.band--in) .flag__label { opacity: 0; }
 .band--in .flag__label {
   opacity: 1;
   transition: opacity var(--dur-short) var(--ease-out) calc(var(--d, 0ms) + 260ms);
@@ -502,17 +503,17 @@ ul, ol { list-style: none; padding: 0; }
 .foot p { text-transform: none; letter-spacing: 0.02em; }
 
 /* ---------- Reveals ---------- */
-.reveal { opacity: 0; transform: translateY(12px); }
-.reveal.is-in {
+.js .reveal { opacity: 0; transform: translateY(12px); }
+.js .reveal.is-in {
   opacity: 1; transform: none;
   transition: opacity var(--dur-long) var(--ease-out),
               transform var(--dur-long) var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal, .reveal.is-in { opacity: 1; transform: none; transition: none; }
-  .band--draw .tick, .band--draw .flagbtn { transform: none; }
-  .band--draw .flag__label { opacity: 1; }
+  .js .reveal, .js .reveal.is-in { opacity: 1; transform: none; transition: none; }
+  .js .band__plot:not(.band--in) .tick, .js .band__plot:not(.band--in) .flagbtn { transform: none; }
+  .js .band__plot:not(.band--in) .flag__label { opacity: 1; }
   .band--in .tick, .band--in .flagbtn, .band--in .flag__label { transition: none; }
   .btn, .quiet, .flagbtn, .record li { transition: none; }
 }
