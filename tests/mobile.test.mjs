@@ -67,16 +67,33 @@ test("long unbreakable words (URLs, tags) wrap instead of widening the page", ()
   assert.match(css, /\.tags li\s*\{[^}]*overflow-wrap:\s*anywhere/);
 });
 
-test("page backdrop: one fixed, decorative layer behind everything; no scroll-driven motion", () => {
-  assert.match(html, /<body>\s*<div class="backdrop" aria-hidden="true"><\/div>/);
-  assert.doesNotMatch(html, /hero__glow/);
-  assert.match(css, /\.backdrop\s*\{[^}]*position:\s*fixed[^}]*\}/);
-  assert.match(css, /\.backdrop\s*\{[^}]*100lvh/, "sized to the largest viewport so the mobile URL bar can't resize it");
-  assert.doesNotMatch(css, /animation-timeline/);
+test("aurora backdrop: decorative, three layers, motion only where supported and wanted", () => {
+  assert.match(html, /<body>\s*<div class="backdrop" aria-hidden="true">/);
+  for (const n of [1, 2, 3]) assert.match(html, new RegExp(`<div class="aurora-wrap aurora-wrap--${n}"><span class="aurora aurora--${n}"></span></div>`));
+  assert.match(css, /\.backdrop\s*\{[^}]*position:\s*fixed[^}]*100lvh/);
+  // Every animation of the aurora sits inside the no-preference gate; scroll timelines also inside @supports
+  const motion = css.match(/@media\s*\(prefers-reduced-motion:\s*no-preference\)\s*\{([\s\S]*?)\n\}\n/)?.[1];
+  assert.ok(motion, "a prefers-reduced-motion: no-preference block");
+  assert.match(motion, /\.aurora--1\s*\{[^}]*animation:[^;}]*\b41s\b/);
+  assert.match(motion, /\.aurora--2\s*\{[^}]*animation:[^;}]*\b53s\b/);
+  assert.match(motion, /\.aurora--3\s*\{[^}]*animation:[^;}]*\b67s\b/);
+  assert.match(motion, /@supports\s*\(animation-timeline:\s*scroll\(\)\)\s*\{[\s\S]*animation-timeline:\s*scroll\(root\)/);
+  const outside = css.replace(motion, "");
+  assert.doesNotMatch(outside, /\.aurora[\w-]*\s*\{[^}]*animation(-name)?:\s*(?!none)/, "no aurora animation outside the gate");
+  // Pause (WCAG 2.2.2) freezes everything
+  assert.match(css, /\.aurora-paused\s+\.aurora[^{]*,\s*\.aurora-paused\s+\.aurora-wrap[^{]*\{[^}]*animation-play-state:\s*paused/);
+  // More contrast removes it; reduced transparency keeps it (a tint, not a see-through surface)
   const contrast = css.match(/@media\s*\(prefers-contrast:\s*more\)\s*\{([\s\S]*?)\n\}/)?.[1];
-  assert.match(contrast, /\.backdrop\s*\{[^}]*display:\s*none/);
+  assert.match(contrast, /\.backdrop[^{]*\{[^}]*display:\s*none/);
   const transparency = css.match(/@media\s*\(prefers-reduced-transparency:\s*reduce\)\s*\{([\s\S]*?)\n\}/)?.[1];
-  assert.doesNotMatch(transparency, /\.backdrop/);
+  assert.doesNotMatch(transparency, /\.backdrop|\.aurora/);
+});
+
+test("pause toggle: a real button, hidden until JS shows it, saved choice applied before paint", () => {
+  assert.match(html, /<button class="motion-toggle" type="button" aria-pressed="false" hidden>/);
+  const head = html.slice(0, html.indexOf("</head>"));
+  assert.match(head, /localStorage\.getItem\("aurora"\)\s*===\s*"paused"/);
+  assert.match(head, /classList\.add\("aurora-paused"\)/);
 });
 
 test("turning-point captions use the link blue (accent text fails 4.5:1 on the glow)", () => {

@@ -11,7 +11,7 @@
   --bg:           #ffffff;  /* page ground */
   --surface:      #f5f5f7;  /* fieldwork cards */
   --label:        #1d1d1f;  /* primary text */
-  --label-2:      #6e6e73;  /* secondary text, small captions */
+  --label-2:      #636366;  /* secondary text; darker than Apple's #6e6e73 so it holds 4.5:1 over the aurora */
   --label-3:      #86868b;  /* large text and non-text marks only — 3.6:1 on white */
   --separator:    rgba(0, 0, 0, 0.1);
   --tick:         #d2d2d7;  /* routine bars in the trace (decorative) */
@@ -24,7 +24,11 @@
   --material:     rgba(255, 255, 255, 0.72);  /* translucent nav */
   --focus:        #0071e3;
   --ok:           #34c759;  /* "open to roles" dot */
-  --glow-strength: 8%;     /* hero backdrop peak; tested so hero text keeps 4.5:1 on it */
+  --glow-strength: 6%;      /* aurora layer 1 (blue) peak */
+  --aurora-2:     #30b0c7;  /* teal */
+  --aurora-2-strength: 7%;
+  --aurora-3:     #5856d6;  /* indigo */
+  --aurora-3-strength: 5%;  /* all three stacked: tested so text keeps 4.5:1 */
 
   /* Type — system first, no web fonts */
   --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
@@ -85,6 +89,10 @@
     --material:     rgba(22, 22, 23, 0.8);
     --focus:        #2997ff;
     --ok:           #30d158;
-    --glow-strength: 18%;
+    --glow-strength: 12%;
+    --aurora-2:     #40c8e0;
+    --aurora-2-strength: 10%;
+    --aurora-3:     #5e5ce6;
+    --aurora-3-strength: 10%;
   }
 }

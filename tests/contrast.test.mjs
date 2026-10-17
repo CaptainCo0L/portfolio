@@ -43,30 +43,33 @@ for (const [mode, tokens] of [["light", light], ["dark", dark]]) {
   }
 }
 
-// The page backdrop: --accent at --glow-strength over --bg is the brightest/darkest spot any text
-// on the page can sit on. Every text colour must still clear 4.5:1 there; accent marks 3:1.
-const pct = (block) => Number(block.match(/--glow-strength:\s*(\d+(?:\.\d+)?)%/)?.[1]);
-const glowStrength = { light: pct(lightBlock), dark: pct(darkBlock) || pct(lightBlock) };
+// The aurora backdrop: three layers (--accent, --aurora-2, --aurora-3), each at its strength
+// token. They drift, so assume the worst case — all three peaks stacked on one spot — and require
+// every text colour to clear 4.5:1 there, accent marks 3:1.
+const strength = (block, name) => Number(block.match(new RegExp(String.raw`${name}:\s*(\d+(?:\.\d+)?)%`))?.[1]);
+const LAYERS = [["--accent", "--glow-strength"], ["--aurora-2", "--aurora-2-strength"], ["--aurora-3", "--aurora-3-strength"]];
 const mix = (fg, bg, a) => "#" + [1, 3, 5].map((i) => {
   const f = parseInt(fg.slice(i, i + 2), 16), b = parseInt(bg.slice(i, i + 2), 16);
   return Math.round(f * a + b * (1 - a)).toString(16).padStart(2, "0");
 }).join("");
-
-for (const [mode, tokens] of [["light", light], ["dark", dark]]) {
-  for (const fg of ["--label", "--label-2", "--link"]) {
-    test(`${mode}: ${fg} over the backdrop glow ≥ 4.5:1`, () => {
-      const a = glowStrength[mode] / 100;
-      assert.ok(a > 0 && a <= 1, `--glow-strength missing for ${mode}`);
-      const glow = mix(tokens["--accent"], tokens["--bg"], a);
-      const r = ratio(tokens[fg], glow);
-      assert.ok(r >= 4.5, `${fg} on glow ${glow} is ${r.toFixed(2)}:1`);
-    });
-  }
+function worstCase(mode, tokens) {
+  return LAYERS.reduce((under, [color, str]) => {
+    const pct = strength(mode === "dark" ? darkBlock : lightBlock, str) || strength(lightBlock, str);
+    assert.ok(tokens[color], `${color} missing in ${mode}`);
+    assert.ok(pct > 0, `${str} missing in ${mode}`);
+    return mix(tokens[color], under, pct / 100);
+  }, tokens["--bg"]);
 }
 
 for (const [mode, tokens] of [["light", light], ["dark", dark]]) {
-  test(`${mode}: --accent marks over the backdrop glow ≥ 3:1 (non-text)`, () => {
-    const glow = mix(tokens["--accent"], tokens["--bg"], glowStrength[mode] / 100);
-    assert.ok(ratio(tokens["--accent"], glow) >= 3);
+  for (const fg of ["--label", "--label-2", "--link"]) {
+    test(`${mode}: ${fg} over the stacked aurora ≥ 4.5:1`, () => {
+      const glow = worstCase(mode, tokens);
+      const r = ratio(tokens[fg], glow);
+      assert.ok(r >= 4.5, `${fg} on ${glow} is ${r.toFixed(2)}:1`);
+    });
+  }
+  test(`${mode}: --accent marks over the stacked aurora ≥ 3:1 (non-text)`, () => {
+    assert.ok(ratio(tokens["--accent"], worstCase(mode, tokens)) >= 3);
   });
 }

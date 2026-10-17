@@ -41,7 +41,7 @@ a { color: inherit; }
 /* Phones: taps fire without the double-tap wait, and controls don't select
    their label on long-press. Body text stays selectable. */
 a, button { touch-action: manipulation; }
-.btn, .chip, .nav__links a, .nav__brand {
+.btn, .chip, .motion-toggle, .nav__links a, .nav__brand {
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -170,20 +170,61 @@ ul, ol { list-style: none; padding: 0; }
 }
 
 /* ---------- Hero ---------- */
-/* The backdrop: the timeline's two colours as one soft light, fixed to the viewport —
-   the page scrolls over it, it never moves. Sized to the largest viewport (lvh) so the
-   mobile URL bar showing/hiding can't resize it. Peak strength is a token, so the
-   contrast test can check every text colour on its brightest spot. */
+/* The aurora: three soft curtains of light (blue, teal, indigo) fixed behind the page.
+   Each layer peaks at a strength token; the contrast test stacks all three peaks and
+   checks every text colour on the result. Layers are larger than the viewport so the
+   drift never shows an edge. Sized to the largest viewport (lvh) so the mobile URL
+   bar can't resize it. All motion lives in the Motion section. */
 .backdrop {
   position: fixed;
   top: 0; left: 0; right: 0;
   height: 100lvh;
   z-index: -1;
+  overflow: hidden;
   pointer-events: none;
-  background:
-    radial-gradient(60% 55% at 85% 12%, color-mix(in srgb, var(--accent) var(--glow-strength), transparent), transparent 72%),
-    radial-gradient(55% 60% at 8% 92%, color-mix(in srgb, var(--accent) calc(var(--glow-strength) * 0.6), transparent), transparent 70%);
 }
+.aurora-wrap { position: absolute; inset: 0; }
+.aurora { position: absolute; inset: -25%; }
+.aurora--1 {
+  background:
+    radial-gradient(38% 15% at 64% 28%, color-mix(in srgb, var(--accent) var(--glow-strength), transparent), transparent 70%),
+    radial-gradient(26% 11% at 24% 16%, color-mix(in srgb, var(--accent) calc(var(--glow-strength) * 0.6), transparent), transparent 70%);
+  transform: rotate(-14deg);
+}
+.aurora--2 {
+  background:
+    radial-gradient(44% 13% at 38% 54%, color-mix(in srgb, var(--aurora-2) var(--aurora-2-strength), transparent), transparent 70%),
+    radial-gradient(24% 10% at 80% 66%, color-mix(in srgb, var(--aurora-2) calc(var(--aurora-2-strength) * 0.6), transparent), transparent 70%);
+  transform: rotate(6deg);
+}
+.aurora--3 {
+  background:
+    radial-gradient(36% 14% at 58% 80%, color-mix(in srgb, var(--aurora-3) var(--aurora-3-strength), transparent), transparent 70%),
+    radial-gradient(24% 11% at 16% 72%, color-mix(in srgb, var(--aurora-3) calc(var(--aurora-3-strength) * 0.6), transparent), transparent 70%);
+  transform: rotate(-2deg);
+}
+
+/* Pause/play for the background motion (WCAG 2.2.2). Shown by app.js only when there's motion. */
+.motion-toggle {
+  position: fixed;
+  z-index: var(--z-sticky);
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--label-2);
+  background: var(--surface);
+  border: 1px solid var(--separator);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.08);
+  cursor: pointer;
+}
+.motion-toggle[aria-pressed="true"] { color: var(--label); }
+.motion-toggle[aria-pressed="true"]::before { content: "▶ " / ""; }
+.motion-toggle[aria-pressed="false"]::before { content: "❚❚ " / ""; font-size: 0.8em; }
+.motion-toggle[hidden] { display: none; }
 
 .hero { padding-top: clamp(var(--space-2xl), 8vw, var(--space-4xl)); }
 
@@ -525,6 +566,42 @@ body { transition: background-color 300ms ease, color 300ms ease; }
   .numbers:popover-open { opacity: 0; transform: scale(0.97); }
 }
 
+/* The aurora: slow drift (co-prime 41/53/67s, so the layers never fall into step;
+   far slower than the ~5s loops that trouble vestibular systems) plus a scroll reaction
+   (layers move at different depths and the colour balance shifts from blue at the top
+   toward teal and indigo lower down). Transform/opacity only. Reduced motion: still. */
+@media (prefers-reduced-motion: no-preference) {
+  .aurora--1 { animation: aurora-a 41s ease-in-out infinite alternate; }
+  .aurora--2 { animation: aurora-b 53s ease-in-out infinite alternate; }
+  .aurora--3 { animation: aurora-c 67s ease-in-out infinite alternate; }
+  @supports (animation-timeline: scroll()) {
+    .aurora-wrap--1 { animation: aurora-scroll-1 linear both; animation-timeline: scroll(root); }
+    .aurora-wrap--2 { animation: aurora-scroll-2 linear both; animation-timeline: scroll(root); }
+    .aurora-wrap--3 { animation: aurora-scroll-3 linear both; animation-timeline: scroll(root); }
+  }
+}
+.aurora-paused .aurora,
+.aurora-paused .aurora-wrap { animation-play-state: paused; }
+
+@keyframes aurora-a {
+  0%   { transform: translate3d(-6%, -3%, 0) rotate(-14deg) scale(1); }
+  50%  { transform: translate3d(4%, 2%, 0) rotate(-8deg) scale(1.12); }
+  100% { transform: translate3d(7%, -2%, 0) rotate(-16deg) scale(1.05); }
+}
+@keyframes aurora-b {
+  0%   { transform: translate3d(5%, 2%, 0) rotate(6deg) scale(1.05); }
+  50%  { transform: translate3d(-4%, -3%, 0) rotate(12deg) scale(1); }
+  100% { transform: translate3d(-7%, 3%, 0) rotate(4deg) scale(1.14); }
+}
+@keyframes aurora-c {
+  0%   { transform: translate3d(-3%, 4%, 0) rotate(-2deg) scale(1.1); }
+  50%  { transform: translate3d(6%, -2%, 0) rotate(-8deg) scale(1.02); }
+  100% { transform: translate3d(2%, -5%, 0) rotate(2deg) scale(1.12); }
+}
+@keyframes aurora-scroll-1 { from { transform: translateY(0); opacity: 1; }    to { transform: translateY(-14%); opacity: 0.45; } }
+@keyframes aurora-scroll-2 { from { transform: translateY(8%); opacity: 0.55; } to { transform: translateY(-8%); opacity: 1; } }
+@keyframes aurora-scroll-3 { from { transform: translateY(14%); opacity: 0.35; } to { transform: translateY(-4%); opacity: 1; } }
+
 /* The stage being read */
 .stage__node { transition: background-color 200ms ease, border-color 200ms ease; }
 
@@ -552,7 +629,7 @@ body { transition: background-color 300ms ease, color 300ms ease; }
 
 /* Firmer edges and stronger secondary text */
 @media (prefers-contrast: more) {
-  .backdrop { display: none; }
+  .backdrop, .motion-toggle { display: none; }
   :root { --label-2: var(--label); --label-3: var(--label); --separator: currentColor; }
   .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: 1px solid var(--label); }
   .case, .off__item, .numbers, .chip, .tags li { border: 1px solid var(--label); }

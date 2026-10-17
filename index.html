@@ -19,12 +19,17 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2211%22 fill=%22%230071e3%22/%3E%3C/svg%3E" />
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
-  <script>document.documentElement.classList.add("js")</script>
-  <!-- @build:styles --><link rel="stylesheet" href="tokens.css?v=9251b9434b" />
-  <link rel="stylesheet" href="styles.css?v=e6a8d01e2e" /><!-- @end:styles -->
+  <script>document.documentElement.classList.add("js");try{if(localStorage.getItem("aurora")==="paused")document.documentElement.classList.add("aurora-paused")}catch(e){}</script>
+  <!-- @build:styles --><link rel="stylesheet" href="tokens.css?v=0bc6d2f9a9" />
+  <link rel="stylesheet" href="styles.css?v=163f7becbd" /><!-- @end:styles -->
 </head>
 <body>
-  <div class="backdrop" aria-hidden="true"></div>
+  <div class="backdrop" aria-hidden="true">
+    <!-- Aurora: decorative; drifts slowly and reacts to scroll (pausable, still under reduced motion) -->
+    <div class="aurora-wrap aurora-wrap--1"><span class="aurora aurora--1"></span></div>
+    <div class="aurora-wrap aurora-wrap--2"><span class="aurora aurora--2"></span></div>
+    <div class="aurora-wrap aurora-wrap--3"><span class="aurora aurora--3"></span></div>
+  </div>
 
   <a class="skip" href="#main">Skip to content</a>
 
@@ -294,6 +299,8 @@
   </footer>
 
 
-  <!-- @build:script --><script src="app.js?v=cc22318f4c"></script><!-- @end:script -->
+  <button class="motion-toggle" type="button" aria-pressed="false" hidden>Pause background</button>
+
+  <!-- @build:script --><script src="app.js?v=23bd5d35ec"></script><!-- @end:script -->
 </body>
 </html>

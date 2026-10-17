@@ -122,3 +122,11 @@ instant anchor scroll; no press scale.
 numbers?: true, link?: { href, text } }]` · `numbers: [{ value, unit, label }]` (was `stats`) ·
 `offClock: [{ icon, title, text }]` (`icon` ∈ the eight illustration names) · `phases` and `stats` removed ·
 everything else unchanged. `contact.location` → `"Kochi, Kerala, India"`; `contactHeading` → `"Say hello."`.
+
+## 9. Aurora backdrop (added 2026-10-17, owner request — supersedes the static backdrop)
+
+Owner explicitly chose always-on background motion after the gate result (frequency/function/vestibular) was
+explained. Implemented with the safeguards in plan Task 12: slow co-prime drift (41/53/67s, transform only), scroll
+parallax + colour balance via scroll timeline, reduced motion → still, WCAG 2.2.2 pause toggle (persisted), more
+contrast → removed, worst-case stacked-layer contrast enforced by tests. Colours: `--accent`, `--aurora-2` (teal),
+`--aurora-3` (indigo) at per-layer strength tokens.

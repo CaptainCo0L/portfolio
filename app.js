@@ -136,6 +136,23 @@
     pop.addEventListener("pointerleave", leave);
   })();
 
+  /* ---------- Background motion: pause / play (WCAG 2.2.2) ----------
+     The aurora drifts on its own, so it needs an off switch. The choice is
+     remembered; the inline head script applies it before first paint. */
+  (function auroraToggle() {
+    const btn = $(".motion-toggle");
+    if (!btn || reduceMotion || window.matchMedia("(prefers-contrast: more)").matches) return;
+    const root = document.documentElement;
+    const sync = () => btn.setAttribute("aria-pressed", String(root.classList.contains("aurora-paused")));
+    btn.hidden = false;
+    sync();
+    btn.addEventListener("click", () => {
+      const paused = root.classList.toggle("aurora-paused");
+      try { localStorage.setItem("aurora", paused ? "paused" : "playing"); } catch (e) { /* private mode: not remembered */ }
+      sync();
+    });
+  })();
+
   /* ---------- One-shot heading reveals ---------- */
   if (reduceMotion || !("IntersectionObserver" in window)) {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-in"));

@@ -181,3 +181,20 @@ Replaces Task 10's hero-only, scroll-faded glow. One `position: fixed` layer beh
 so mobile URL-bar changes don't resize it), no animation. Contrast now applies page-wide: `.stage__turn` text moves
 from `--accent` to `--link` (accent text on the glow is ~4.2:1); accent stays for non-text marks (≥ 3:1 on glow).
 More contrast: backdrop removed. Tests first; browser check updated to assert it stays fixed while content scrolls.
+
+### Task 12: Aurora backdrop — ambient drift + scroll reaction (owner request: "move like northern lights, and react when scrolling")
+
+Owner chose this after the trade-off was explained (always-on background motion behind text). Safeguards are the spec:
+- Three curtain layers (blue `--accent`, teal `--aurora-2`, indigo `--aurora-3`) inside the fixed `.backdrop`.
+- **Ambient drift:** CSS keyframes on `.aurora` (transform only), 41s / 53s / 67s (co-prime, never sync; far from the
+  ~5s vestibular-risk loop), `ease-in-out` alternate (on-screen movement), small amplitude.
+- **Scroll reaction:** `.aurora-wrap` layers with `animation-timeline: scroll(root)` over the whole page (linear):
+  different `translateY` depths (parallax) and opacity balance (blue top → teal/indigo lower). Gated by
+  `@supports (animation-timeline: scroll())`.
+- **Reduced motion:** no animation at all (static composition). **WCAG 2.2.2:** a "Pause background" toggle
+  (`button.motion-toggle`, `aria-pressed`, persisted in `localStorage`, applied pre-paint from the inline head script)
+  sets `html.aurora-paused` → `animation-play-state: paused` on every aurora animation. The toggle is shown only with
+  JS and without reduced motion. **More contrast:** backdrop removed.
+- **Contrast:** worst case = all three layers' peaks stacked over `--bg`; every text colour ≥ 4.5:1 on it, accent marks ≥ 3:1.
+- Tests first; browser check `tests/browser/aurora.js`: drifts over time, reacts to scroll, pause freezes both, reduced
+  motion has no animations and no toggle, no overflow; axe + keyboard walk (toggle is the last stop).
