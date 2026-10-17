@@ -56,3 +56,13 @@ test("status bar colour per scheme", () => {
   assert.match(html, /<meta name="theme-color" content="#ffffff" media="\(prefers-color-scheme: light\)"/);
   assert.match(html, /<meta name="theme-color" content="#000000" media="\(prefers-color-scheme: dark\)"/);
 });
+
+test("increased contrast: every surface-filled box gets a visible border", () => {
+  const block = css.match(/@media\s*\(prefers-contrast:\s*more\)\s*\{([\s\S]*?)\n\}/)[1];
+  for (const sel of [".case", ".off__item", ".numbers", ".tags li"]) assert.ok(block.includes(sel), sel);
+});
+
+test("long unbreakable words (URLs, tags) wrap instead of widening the page", () => {
+  assert.match(css, /(^|[}\s])body\s*\{[^}]*overflow-wrap:\s*break-word/m);
+  assert.match(css, /\.tags li\s*\{[^}]*overflow-wrap:\s*anywhere/);
+});

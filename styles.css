@@ -26,6 +26,7 @@ body {
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;   /* a pasted URL wraps instead of widening the page */
 }
 
 /* Tracking and leading tighten as size grows, so each heading sets its own. */
@@ -184,7 +185,6 @@ ul, ol { list-style: none; padding: 0; }
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   gap: var(--space-2xl);
   align-items: end;
-  padding-bottom: var(--space-2xl);
 }
 .hero__lede {
   font-size: var(--text-md);
@@ -324,9 +324,11 @@ ul, ol { list-style: none; padding: 0; }
   font-size: var(--text-xs);
   font-weight: 500;
   color: var(--label-2);
-  background: color-mix(in oklab, var(--label) 6%, transparent);
+  background: var(--surface);   /* token pair: --label-2 on --surface is tested ≥ 4.5:1 */
   border-radius: var(--radius-pill);
   padding: 0.25rem 0.65rem;
+  max-width: 100%;
+  overflow-wrap: anywhere;      /* even a 60-char tag stays inside the column */
 }
 
 /* ---------- "By the numbers": chip + popover ---------- */
@@ -406,7 +408,7 @@ ul, ol { list-style: none; padding: 0; }
   border-radius: var(--radius);
   padding: var(--space-xl);
 }
-.case .tags li { background: color-mix(in oklab, var(--label) 8%, transparent); }
+.case .tags li { background: var(--bg); }   /* on a card: --label-2 on --bg */
 .case__org {
   font-size: var(--text-sm);
   font-weight: 600;
@@ -537,6 +539,5 @@ body { transition: background-color 300ms ease, color 300ms ease; }
 @media (prefers-contrast: more) {
   :root { --label-2: var(--label); --label-3: var(--label); --separator: currentColor; }
   .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: 1px solid var(--label); }
-  .case { border: 1px solid var(--label); }
-  .tags li { border: 1px solid var(--label); }
+  .case, .off__item, .numbers, .chip, .tags li { border: 1px solid var(--label); }
 }

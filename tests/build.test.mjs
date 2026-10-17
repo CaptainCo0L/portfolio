@@ -88,3 +88,8 @@ test("the JSON-LD in the built page parses", () => {
   const ld = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
   assert.equal(ld["@type"], "Person");
 });
+
+test("a favicon is declared (browsers otherwise request /favicon.ico and get a 404)", () => {
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  assert.match(html, /<link rel="icon" href="data:image\/svg\+xml,/);
+});
