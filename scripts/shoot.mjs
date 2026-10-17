@@ -78,6 +78,9 @@ const send = (method, params = {}) =>
   });
 
 await send("Page.enable");
+// Always fetch fresh files — a cached app.js from an older build once broke the trace here.
+await send("Network.enable");
+await send("Network.setCacheDisabled", { cacheDisabled: true });
 // Page scripts off; Runtime.evaluate below still works for measuring.
 if (noJs) await send("Emulation.setScriptExecutionDisabled", { value: true });
 try {

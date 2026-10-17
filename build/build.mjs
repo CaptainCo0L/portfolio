@@ -8,6 +8,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
+import { createHash } from "node:crypto";
 import { renderSections } from "./render.mjs";
 
 const ROOT = new URL("../", import.meta.url);
@@ -40,7 +41,21 @@ export function applyMarkers(html, sections) {
 /* git may check index.html out with CRLF; only content counts. */
 export const isStale = (current, fresh) => lf(current) !== lf(fresh);
 
-export const buildIndex = (html, data) => applyMarkers(html, renderSections(data, SITE));
+/* ?v=<hash of the file> on every asset URL: Pages caches assets for ~10 min,
+   and new HTML with a cached old app.js or CSS breaks the page. Hashed over
+   LF-normalised text so a CRLF checkout and CI's LF checkout agree. */
+const stamp = (file) => {
+  const text = lf(readFileSync(new URL(file, ROOT), "utf8"));
+  return `${file}?v=${createHash("sha256").update(text).digest("hex").slice(0, 10)}`;
+};
+
+export const buildIndex = (html, data) =>
+  applyMarkers(html, {
+    ...renderSections(data, SITE),
+    styles: `<link rel="stylesheet" href="${stamp("tokens.css")}" />
+  <link rel="stylesheet" href="${stamp("styles.css")}" />`,
+    script: `<script src="${stamp("app.js")}"></script>`,
+  });
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const indexPath = fileURLToPath(new URL("index.html", ROOT));

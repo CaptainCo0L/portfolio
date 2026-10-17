@@ -61,6 +61,8 @@ const send = (method, params = {}) =>
 let failed = false;
 try {
   await send("Page.enable");
+  await send("Network.enable");
+  await send("Network.setCacheDisabled", { cacheDisabled: true });
   await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: width < 1024 });
   if (media) {
     const [name, value] = media.split("=");

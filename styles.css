@@ -4,7 +4,7 @@
  * everything around it stays quiet on purpose.
  */
 
-@import url("tokens.css");
+/* tokens.css is linked from index.html (not @imported) so it can be cache-busted. */
 
 /* ---------- Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -190,7 +190,7 @@ ul, ol { list-style: none; padding: 0; }
 .band { margin: 0; }
 
 .band__cap {
-  width: min(100% - 2.5rem, 76rem);
+  width: min(100% - 2.5rem, 70rem);
   margin-inline: auto;
   display: flex; justify-content: space-between; gap: var(--space-md);
   padding-bottom: var(--space-sm);
@@ -199,69 +199,69 @@ ul, ol { list-style: none; padding: 0; }
 .band__key { display: flex; align-items: center; gap: 0.4rem; }
 .key {
   display: inline-block; width: 8px; height: 8px;
-  border-radius: 1px;
+  border-radius: 50%;
   margin-left: var(--space-sm);
 }
-.key--base { background: var(--mint); }
-.key--flag { background: var(--sodium); }
+.key--base { background: var(--signal-base); }
+.key--flag { background: var(--accent); }
 
 .band__plot {
   display: flex;
   align-items: flex-end;
   gap: 2px;
   height: clamp(130px, 20vw, 210px);
-  padding-inline: max(1.25rem, calc((100% - 76rem) / 2));
-  border-top: var(--hairline);
-  border-bottom: var(--hairline);
-  padding-block: 2.25rem var(--space-md);
+  padding-inline: max(1.25rem, calc((100% - 70rem) / 2));
+  padding-block: 2.25rem 0;
+  border-bottom: var(--hairline);   /* the baseline itself */
   overflow: hidden;
 }
 
-/* A routine event: short, cool, silent. */
+/* A routine event: short, quiet, silent. */
 .tick {
   flex: 1 1 auto;
   min-width: 2px;
-  background: var(--petrol-3);
-  border-radius: 1px;
+  background: var(--tick);
+  border-radius: 2px 2px 0 0;
   transform-origin: bottom;
 }
 
-/* A recorded event: tall and clickable. Mint = baseline work,
-   sodium = a turn in the story. Same distinction as the record below. */
+/* A recorded event: tall and clickable. Grey = baseline work,
+   blue = a turn in the story. Same distinction as the record below. */
 .flagbtn {
   flex: 0 0 auto;
   width: 4px;
   padding: 0;
   border: 0;
-  background: var(--sodium);
-  border-radius: 1px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
   cursor: pointer;
   position: relative;
   transform-origin: bottom;
-  transition: filter var(--dur-micro) var(--ease-out);
 }
-.flagbtn--base { background: var(--mint); }
-.flagbtn--base .flag__label { color: var(--mint); }
+.flagbtn--base { background: var(--signal-base); }
 .flagbtn::after {
   /* a wider, invisible hit area — the bar itself is only 4px */
   content: "";
-  position: absolute; inset: -8px -10px;
+  position: absolute; inset: -8px -12px;
 }
-.flagbtn:hover, .flagbtn:focus-visible { filter: brightness(1.25); }
+.flagbtn:focus-visible { filter: brightness(1.2); }
+@media (hover: hover) and (pointer: fine) {
+  .flagbtn:hover { filter: brightness(1.2); }
+}
 
 .flagbtn .flag__label {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  font-family: var(--font-mono);
   font-size: var(--text-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--sodium);
+  font-weight: 600;
+  color: var(--accent);
   white-space: nowrap;
   pointer-events: none;
 }
+/* Grey text would be 3.6:1; the bar stays grey, the label reads as secondary text. */
+.flagbtn--base .flag__label { color: var(--label-2); }
 /* Keep the first and last labels inside the plot */
 .flagbtn:first-of-type .flag__label { left: 0; transform: none; }
 .flagbtn:last-of-type  .flag__label { left: auto; right: 0; transform: none; }
@@ -281,45 +281,44 @@ ul, ol { list-style: none; padding: 0; }
   transition: opacity var(--dur-short) var(--ease-out) calc(var(--d, 0ms) + 260ms);
 }
 
+/* Phones: half the ticks, so the trace stays a trace instead of a smear. */
 @media (max-width: 640px) {
   .band__plot { gap: 1px; }
   .tick { min-width: 1px; }
+  .tick:nth-of-type(even) { display: none; }
 }
 
 /* ---------- Readout rail ---------- */
 .readout {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-bottom: var(--hairline);
+  gap: var(--space-lg);
   margin-top: var(--space-xl);
 }
-.readout > div {
-  padding: var(--space-md) var(--space-lg) var(--space-lg) 0;
-}
-.readout > div + div {
-  border-left: var(--hairline);
-  padding-left: var(--space-lg);
-}
 .readout dt {
-  font-family: var(--font-mono);
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: var(--bone);
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  color: var(--label);
 }
-.readout dt small { font-size: 0.9rem; color: var(--haze); margin-left: 0.2rem; }
+.readout dt small {
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--label-2);
+  margin-left: 0.2rem;
+}
 .readout dd {
   margin: var(--space-2xs) 0 0;
   font-size: var(--text-sm);
-  color: var(--haze);
   line-height: 1.4;
+  color: var(--label-2);
 }
 @media (max-width: 760px) {
-  .readout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .readout > div { padding-right: var(--space-md); }
-  .readout > div:nth-child(odd) { border-left: 0; padding-left: 0; }
-  .readout > div:nth-child(n+3) { border-top: var(--hairline); }
+  .readout { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-xl); }
 }
 
 /* ---------- Sections ---------- */

@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { loadData, applyMarkers, isStale, buildIndex } from "../build/build.mjs";
 
 const page = (body) => `<head>\n<!-- @build:a -->old<!-- @end:a -->\n</head>${body}`;
@@ -42,10 +43,22 @@ test("every hidden-until-JS state in styles.css is scoped under .js", () => {
   }
 });
 
+test("asset URLs carry a content hash so a deploy never pairs new HTML with cached old JS/CSS", () => {
+  const html = buildIndex(readFileSync(new URL("../index.html", import.meta.url), "utf8"), loadData());
+  for (const file of ["tokens.css", "styles.css", "app.js"]) {
+    // LF-normalised: Windows checkouts are CRLF, CI is LF, and both must agree.
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8").replace(/\r\n/g, "\n");
+    const hash = createHash("sha256").update(text).digest("hex").slice(0, 10);
+    assert.ok(html.includes(`${file}?v=${hash}"`), `${file} not stamped with ?v=${hash}`);
+  }
+  const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+  assert.doesNotMatch(css, /@import\s+(url\(|["'])/,"tokens.css must be linked from the HTML, not @imported (an import can't be cache-busted)");
+});
+
 test("index.html marks JS before CSS loads and no longer needs data.js", () => {
   const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   const js = html.indexOf('document.documentElement.classList.add("js")');
-  assert.ok(js > -1 && js < html.indexOf('href="styles.css"'), "inline .js script before the stylesheet");
+  assert.ok(js > -1 && js < html.indexOf('rel="stylesheet"'), "inline .js script before the stylesheets");
   assert.doesNotMatch(html, /<script src="data\.js">/);
   assert.doesNotMatch(html, /<noscript>/);
 });
