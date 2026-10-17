@@ -1,36 +1,44 @@
-/* Baseline & Anomaly — design tokens
- * Ground: petrol (chromatic dark blue-green, never flat black).
- * Two signals only: sodium amber = flagged event, mint = nominal.
- * Warm bone type on a cool ground — that tension is the whole palette.
+/* Apple light + dark — design tokens
+ * Follows the visitor's system appearance; no toggle.
+ * One accent (system blue). The career trace keeps its two states:
+ * grey = baseline, blue = flagged. Type is the platform's own.
+ * Contrast pairs are enforced by tests/contrast.test.mjs.
  */
 :root {
-  /* Colour */
-  --petrol:      #0f2129;  /* page ground */
-  --petrol-2:    #16303a;  /* raised surface: cards, table stripes */
-  --petrol-3:    #1e404c;  /* hairlines, bar baseline */
-  --rule:        #244c59;  /* borders */
-  --bone:        #ede7dc;  /* primary text */
-  --bone-dim:    #c3c0b7;  /* secondary text */
-  --haze:        #7e9aa3;  /* tertiary / mono labels */
-  --sodium:      #f0a63c;  /* flagged — anomalies, marks, the one loud colour */
-  --sodium-deep: #c47d1e;  /* sodium on light / pressed */
-  --mint:        #6fbfa6;  /* nominal — baseline, "ok" states */
-  --focus:       #f0a63c;
+  color-scheme: light dark;
 
-  /* Type — Bricolage display · Newsreader body · IBM Plex Mono data */
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-body:    "Newsreader", Georgia, "Times New Roman", serif;
-  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+  /* Colour — light */
+  --bg:           #ffffff;  /* page ground */
+  --surface:      #f5f5f7;  /* fieldwork cards */
+  --label:        #1d1d1f;  /* primary text */
+  --label-2:      #6e6e73;  /* secondary text, small captions */
+  --label-3:      #86868b;  /* large text and non-text marks only — 3.6:1 on white */
+  --separator:    rgba(0, 0, 0, 0.1);
+  --tick:         #d2d2d7;  /* routine bars in the trace (decorative) */
+  --signal-base:  #86868b;  /* recorded baseline events */
+  --accent:       #0071e3;  /* flagged events, accent text */
+  --link:         #0066cc;  /* text links; also accent text on --surface */
+  --button:       #0071e3;  /* same in both modes: white text keeps 4.5:1 */
+  --button-hover: #0068d1;  /* darker, not lighter — Apple's #0077ed is ~4.3:1 */
+  --on-accent:    #ffffff;
+  --material:     rgba(255, 255, 255, 0.72);  /* translucent nav */
+  --focus:        #0071e3;
+  --ok:           #34c759;  /* "open to roles" dot */
+
+  /* Type — system first, no web fonts */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-body:    -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono:    ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Scale */
-  --text-xs:   0.75rem;
-  --text-sm:   0.875rem;
-  --text-base: 1.0625rem;
-  --text-md:   1.25rem;
-  --text-lg:   1.5rem;
-  --text-xl:   2rem;
-  --text-h2:   clamp(2rem, 3.2vw + 1rem, 3.25rem);
-  --text-hero: clamp(2.6rem, 6.2vw + 0.5rem, 6rem);
+  --text-xs:   0.75rem;    /* 12 */
+  --text-sm:   0.875rem;   /* 14 */
+  --text-base: 1.0625rem;  /* 17 */
+  --text-md:   1.3125rem;  /* 21 */
+  --text-lg:   1.5rem;     /* 24 */
+  --text-xl:   1.75rem;    /* 28 */
+  --text-h2:   clamp(2rem, 2.8vw + 1rem, 3rem);
+  --text-hero: clamp(2.75rem, 5.2vw + 1rem, 5rem);
 
   /* Space — 4pt */
   --space-2xs: 0.25rem;
@@ -43,17 +51,38 @@
   --space-3xl: 6.5rem;
   --space-4xl: 9rem;
 
-  /* Motion */
+  /* Motion — critically damped feel, no overshoot */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --dur-micro: 130ms;
+  --dur-press: 100ms;
+  --dur-micro: 150ms;
   --dur-short: 260ms;
   --dur-long:  520ms;
 
   /* Structure */
-  --radius: 2px;          /* near-square: instrument, not app */
-  --hairline: 1px solid var(--rule);
+  --radius-sm:   8px;      /* record rows, skip link */
+  --radius:      18px;     /* cards */
+  --radius-pill: 980px;    /* buttons, tags */
+  --hairline: 1px solid var(--separator);
   --measure: 62ch;
 
   /* Z */
   --z-sticky: 200;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:           #000000;
+    --surface:      #1c1c1e;
+    --label:        #f5f5f7;
+    --label-2:      #a1a1a6;
+    --label-3:      #86868b;
+    --separator:    rgba(255, 255, 255, 0.14);
+    --tick:         #3a3a3c;
+    --signal-base:  #8e8e93;
+    --accent:       #2997ff;
+    --link:         #2997ff;
+    --material:     rgba(22, 22, 23, 0.8);
+    --focus:        #2997ff;
+    --ok:           #30d158;
+  }
 }
