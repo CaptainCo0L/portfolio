@@ -67,7 +67,8 @@ test("the built index.html carries the content without JavaScript", () => {
   const data = loadData();
   const html = buildIndex(readFileSync(new URL("../index.html", import.meta.url), "utf8"), data);
   assert.ok(html.includes(data.headline), "headline");
-  for (const ph of data.phases) assert.ok(html.includes(ph.title), `phase ${ph.title}`);
+  for (const s of data.stages) assert.ok(html.includes(`<h3>${s.title}</h3>`), `stage ${s.title}`);
+  for (const o of data.offClock) assert.ok(html.includes(`<h3>${o.title}</h3>`), `off-clock ${o.title}`);
   for (const pr of data.projects) assert.ok(html.includes(pr.title.replace(/&/g, "&amp;")), `project ${pr.title}`);
-  assert.match(html, /<dt>3<small>yrs<\/small><\/dt>/);
+  assert.match(html, /<dt>3<small>yrs<\/small><\/dt>/, "numbers are in the HTML even though they sit in a popover");
 });

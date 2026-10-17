@@ -1,6 +1,8 @@
 /* Turns DATA (data.js) into the HTML that build.mjs writes into index.html.
    Every string from DATA goes through esc(); nothing here touches the DOM. */
 
+import { ILLUSTRATIONS } from "./illustrations.mjs";
+
 export const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -8,9 +10,10 @@ export const esc = (s) =>
 const tags = (list) => `<ul class="tags">${list.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
 
 /* ---------- Head: title, description, previews, structured data ---------- */
-const TITLE = "Aswin Sunil — SOC Analyst Candidate · QA Automation";
+const TITLE = "Aswin Sunil — The story so far · QA to security";
 const DESCRIPTION =
-  "QA automation engineer moving into SOC analyst work: 3 years on Fortune 500 apps, 250+ automated tests, a Wazuh SIEM home lab and 6 rooted boot2root boxes.";
+  "Aswin Sunil from Kochi: college, three years of QA automation that changed direction, a reset, and the turn into security — plus football, games and a home lab.";
+const LANGUAGES = ["English", "Malayalam", "Tamil", "Hindi"];
 
 export function renderHead(data, site) {
   const person = {
@@ -22,6 +25,7 @@ export function renderHead(data, site) {
     sameAs: [data.contact.linkedin],
     address: { "@type": "PostalAddress", addressLocality: data.contact.location.split(",")[0] },
     knowsAbout: data.skills.map((s) => s.domain),
+    knowsLanguage: LANGUAGES,
   };
   // "<" escaped so no string in DATA can close the script element early.
   const jsonLd = JSON.stringify(person).replace(/</g, "\\u003c");
@@ -52,82 +56,61 @@ function renderHero(data) {
         </div>`;
 }
 
-/* ---------- Readout rail ---------- */
-export const renderStats = (stats) =>
-  stats
+/* ---------- "By the numbers" (popover on one stage) ---------- */
+export const renderNumbers = (numbers) =>
+  numbers
     .map(
       (s) => `<div>
-        <dt>${esc(s.value)}${s.unit ? `<small>${esc(s.unit)}</small>` : ""}</dt>
-        <dd>${esc(s.label)}</dd>
-      </div>`
+            <dt>${esc(s.value)}${s.unit ? `<small>${esc(s.unit)}</small>` : ""}</dt>
+            <dd>${esc(s.label)}</dd>
+          </div>`
     )
     .join("");
 
-/* ---------- The record ---------- */
-export const renderPhases = (phases) =>
-  phases
-    .map(
-      (ph, i) => `<li${ph.flag ? ` class="is-flagged"` : ""} id="event-${i}" tabindex="-1">
-        <div class="when">
-          ${esc(ph.year)}
-          <span class="class">${ph.flag ? "Flagged" : "Baseline"}</span>
+/* ---------- The story: a vertical timeline ----------
+   The line is grey until the first turning point and blue from there on,
+   so every stage at or after it gets .is-after-turn. Turning points also
+   say so in words — colour is never the only signal. */
+export function renderStory(stages, numbers) {
+  const firstTurn = stages.findIndex((s) => s.turn);
+  return stages
+    .map((st, i) => {
+      const cls = ["stage"];
+      if (st.turn) cls.push("is-turn");
+      if (firstTurn !== -1 && i >= firstTurn) cls.push("is-after-turn");
+      if (st.future) cls.push("is-future");
+      const popover = st.numbers
+        ? `<button class="chip" type="button" popovertarget="numbers">By the numbers</button>
+          <div id="numbers" class="numbers" popover aria-label="${esc(st.title)}, by the numbers">
+            <dl>${renderNumbers(numbers)}</dl>
+          </div>`
+        : "";
+      return `<li class="${cls.join(" ")}" id="stage-${esc(st.id)}" tabindex="-1">
+        <div class="stage__when">
+          ${st.years ? `<span class="stage__years">${esc(st.years)}</span>` : ""}
+          ${st.turn ? `<span class="stage__turn">Turning point</span>` : ""}
         </div>
-        <div>
-          <h3>${esc(ph.title)}</h3>
-          <span class="period">${esc(ph.period)}</span>
-          <p>${esc(ph.body)}</p>
-          ${tags(ph.tags)}
+        <span class="stage__node" aria-hidden="true"></span>
+        <div class="stage__body">
+          <h3>${esc(st.title)}</h3>
+          ${st.place ? `<p class="stage__place">${esc(st.place)}</p>` : ""}
+          ${st.body.map((p) => `<p>${esc(p)}</p>`).join("\n          ")}
+          ${st.tags && st.tags.length ? tags(st.tags) : ""}
+          ${popover}
+          ${st.link ? `<p class="stage__link"><a class="quiet" href="${esc(st.link.href)}">${esc(st.link.text)}</a></p>` : ""}
         </div>
-      </li>`
-    )
+      </li>`;
+    })
     .join("");
-
-/* ---------- Signal band ----------
-   One bar per slot. Routine work draws a short tick; each phase draws a tall
-   bar you can click. Deterministic, so the build output is stable. */
-export function renderBand(phases, slots = 168) {
-  // Deterministic wobble, so the trace looks sampled rather than random.
-  const noise = (i) => {
-    const v = Math.sin(i * 12.9898) * 43758.5453;
-    return v - Math.floor(v);
-  };
-
-  // Nearest free slot for each phase mark: look right first, then left,
-  // so a mark at the far edge can't be pushed off the end.
-  const flagAt = new Map();
-  phases.forEach((ph, i) => {
-    const want = Math.min(slots - 1, Math.max(0, Math.round(ph.mark * (slots - 1))));
-    let slot = want;
-    while (flagAt.has(slot) && slot < slots - 1) slot += 1;
-    if (flagAt.has(slot)) {
-      slot = want;
-      while (flagAt.has(slot) && slot > 0) slot -= 1;
-    }
-    flagAt.set(slot, { phase: ph, index: i });
-  });
-
-  let html = "";
-  for (let i = 0; i < slots; i++) {
-    const delay = `${+(i * 2.5).toFixed(1)}ms`;
-    const flag = flagAt.get(i);
-    if (flag) {
-      const on = flag.phase.flag;
-      html += `<button class="flagbtn${on ? "" : " flagbtn--base"}" type="button"
-          style="height:${on ? 100 : 72}%;--d:${delay}"
-          data-event="${flag.index}"
-          aria-label="${esc(flag.phase.year)} — ${esc(flag.phase.title)}. ${on ? "Flagged" : "Baseline"}. Jump to this entry.">
-          <span class="flag__label">${esc(flag.phase.year)}</span>
-        </button>`;
-    } else {
-      // Baseline sits low; a slow swell through the middle years reads as volume.
-      const swell = Math.sin((i / slots) * Math.PI) * 8;
-      const h = 10 + swell + noise(i) * 16;
-      html += `<span class="tick" aria-hidden="true"
-          style="height:${h.toFixed(1)}%;--d:${delay}"></span>`;
-    }
-  }
-  return html;
 }
+
+/* ---------- Off the clock ---------- */
+export const renderOffClock = (items) =>
+  items
+    .map(
+      (o) => `<li class="off__item">${ILLUSTRATIONS[o.icon] || ""}<h3>${esc(o.title)}</h3><p>${esc(o.text)}</p></li>`
+    )
+    .join("");
 
 /* ---------- Fieldwork ---------- */
 export const renderProjects = (projects) =>
@@ -183,9 +166,8 @@ export function renderSections(data, site) {
     head: renderHead(data, site),
     "nav-status": esc(data.status),
     hero: renderHero(data),
-    stats: renderStats(data.stats),
-    band: renderBand(data.phases),
-    phases: renderPhases(data.phases),
+    story: renderStory(data.stages, data.numbers),
+    "off-clock": renderOffClock(data.offClock),
     projects: renderProjects(data.projects),
     "fieldwork-note": esc(data.fieldworkNote),
     skills: renderSkills(data.skills),
