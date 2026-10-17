@@ -112,7 +112,9 @@ try {
       // (Skipped without JS: there are no reveals, and page timers never fire.)
       if (!noJs) {
         await send("Runtime.evaluate", {
-          expression: "(async()=>{for(let y=0;y<document.documentElement.scrollHeight;y+=400){scrollTo(0,y);await new Promise(r=>setTimeout(r,40))}scrollTo(0,0)})()",
+          // Half a viewport per 150ms: fast enough to finish, slow enough that every
+          // IntersectionObserver callback fires (40ms steps skipped some headings).
+          expression: "(async()=>{const s=innerHeight/2;for(let y=0;y<document.documentElement.scrollHeight;y+=s){scrollTo(0,y);await new Promise(r=>setTimeout(r,150))}scrollTo(0,0)})()",
           awaitPromise: true,
         });
         await sleep(700);
