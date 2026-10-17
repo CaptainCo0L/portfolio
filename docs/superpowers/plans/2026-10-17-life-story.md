@@ -174,3 +174,10 @@ increased contrast removes it (reduced transparency keeps it — see spec).
 - [ ] Implement; probe: opacity 1 at top, < 0.5 at 60vh, static under reduced motion; no horizontal overflow; axe
   clean with the glow; screenshots light/dark.
 - [ ] Commit.
+
+### Task 11: Glow as a fixed full-page backdrop (owner request: "let the glow stay as static bg, and let everything else scroll")
+
+Replaces Task 10's hero-only, scroll-faded glow. One `position: fixed` layer behind the whole page (`height: 100lvh`
+so mobile URL-bar changes don't resize it), no animation. Contrast now applies page-wide: `.stage__turn` text moves
+from `--accent` to `--link` (accent text on the glow is ~4.2:1); accent stays for non-text marks (≥ 3:1 on glow).
+More contrast: backdrop removed. Tests first; browser check updated to assert it stays fixed while content scrolls.
