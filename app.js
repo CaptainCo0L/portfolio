@@ -1,63 +1,118 @@
 /* Progressive enhancement only. The content is already in index.html
-   (generated from data.js by build/build.mjs); this file adds motion and
-   the trace → record links. The page works without it. */
+   (generated from data.js by build/build.mjs); this file adds the
+   current-stage marker, the popover's hover and placement, and the nav
+   spy. The page — popover included — works without it. */
 
 (function () {
   "use strict";
 
   const $ = (sel) => document.querySelector(sel);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   /* ---------- Footer year ---------- */
   $("#foot-year").textContent = new Date().getFullYear() + " ";
 
-  /* ---------- Signal band ---------- */
-  (function band() {
-    const plot = $("#band");
-
-    if (reduceMotion) {
-      plot.classList.add("band--in");
-    } else {
-      requestAnimationFrame(() => requestAnimationFrame(() => plot.classList.add("band--in")));
-    }
-
-    /* A flag is a link into the record. */
-    plot.addEventListener("click", (e) => {
-      const btn = e.target.closest(".flagbtn");
-      if (!btn) return;
-      const target = document.getElementById("event-" + btn.dataset.event);
-      if (!target) return;
-      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-      document.querySelectorAll(".record .is-target").forEach((el) => el.classList.remove("is-target"));
-      target.classList.add("is-target");
-      setTimeout(() => target.classList.remove("is-target"), 2200);
-    });
-  })();
-
-  /* ---------- Nav: mark the section in view ---------- */
-  if ("IntersectionObserver" in window) {
-    const links = new Map(
-      [...document.querySelectorAll('.nav__links a[href^="#"]')].map((a) => [a.hash.slice(1), a])
-    );
-    const spy = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((en) => {
-          const link = links.get(en.target.id);
-          if (en.isIntersecting) {
-            links.forEach((a) => a.removeAttribute("aria-current"));
-            link.setAttribute("aria-current", "location");
-          } else {
-            link.removeAttribute("aria-current");
-          }
-        });
-      },
-      // A thin band across the middle of the viewport: at most one section is "in view".
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    links.forEach((_, id) => spy.observe(document.getElementById(id)));
+  /* ---------- Watch which element sits in the middle band of the viewport ---------- */
+  // A thin band across the middle: at most one stage / section counts as "in view".
+  const MIDDLE = { rootMargin: "-45% 0px -50% 0px" };
+  function spy(elements, onEnter, onLeave) {
+    if (!("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => (en.isIntersecting ? onEnter(en.target) : onLeave(en.target)));
+    }, MIDDLE);
+    elements.forEach((el) => io.observe(el));
   }
 
-  /* ---------- One-shot reveals ---------- */
+  /* ---------- Story: mark the stage being read ---------- */
+  const stages = [...document.querySelectorAll(".stage")];
+  spy(
+    stages,
+    (el) => {
+      stages.forEach((s) => s.classList.remove("is-current"));
+      el.classList.add("is-current");
+    },
+    (el) => el.classList.remove("is-current")
+  );
+
+  /* ---------- Nav: mark the section in view ---------- */
+  const links = new Map(
+    [...document.querySelectorAll('.nav__links a[href^="#"]')].map((a) => [a.hash.slice(1), a])
+  );
+  spy(
+    [...links.keys()].map((id) => document.getElementById(id)).filter(Boolean),
+    (el) => {
+      links.forEach((a) => a.removeAttribute("aria-current"));
+      links.get(el.id).setAttribute("aria-current", "location");
+    },
+    (el) => links.get(el.id).removeAttribute("aria-current")
+  );
+
+  /* ---------- "By the numbers" popover ----------
+     Native popover does the work: click/tap/Enter toggles, Esc and outside
+     clicks close. This adds placement under the chip and, for mouse users,
+     hover intent. Hover never closes a popover the user opened on purpose. */
+  (function numbers() {
+    const chip = $(".chip");
+    const pop = $("#numbers");
+    if (!chip || !pop || !pop.showPopover) return;
+
+    let openedBy = null; // "hover" | "click"
+    let timer = 0;
+    const later = (fn, ms) => {
+      clearTimeout(timer);
+      timer = setTimeout(fn, ms);
+    };
+
+    // Below the chip, left-aligned, kept 16px inside the viewport.
+    pop.addEventListener("toggle", (e) => {
+      if (e.newState !== "open") {
+        openedBy = null;
+        return;
+      }
+      const c = chip.getBoundingClientRect();
+      const w = pop.offsetWidth;
+      const left = Math.min(Math.max(c.left, 16), window.innerWidth - w - 16);
+      // The UA centres popovers (inset: 0; margin: auto); without JS that default stays.
+      pop.style.inset = "auto";
+      pop.style.margin = "0";
+      pop.style.left = left + "px";
+      pop.style.top = c.bottom + 8 + "px";
+      // Grow from the corner nearest the chip.
+      pop.style.transformOrigin = `${Math.round(c.left + c.width / 2 - left)}px 0`;
+    });
+
+    chip.addEventListener("click", (e) => {
+      // A click on a hover-opened popover pins it instead of toggling it shut.
+      if (openedBy === "hover" && pop.matches(":popover-open")) e.preventDefault();
+      openedBy = "click";
+      clearTimeout(timer);
+    });
+
+    if (!finePointer) return;
+
+    const enter = (e) => {
+      if (e.pointerType !== "mouse") return;
+      if (pop.matches(":popover-open")) return clearTimeout(timer);
+      later(() => {
+        openedBy = "hover";
+        pop.showPopover();
+      }, 120);
+    };
+    const leave = (e) => {
+      if (e.pointerType !== "mouse") return;
+      if (openedBy === "click") return;
+      later(() => {
+        if (openedBy === "hover") pop.hidePopover();
+      }, 200);
+    };
+    chip.addEventListener("pointerenter", enter);
+    chip.addEventListener("pointerleave", leave);
+    pop.addEventListener("pointerenter", () => clearTimeout(timer));
+    pop.addEventListener("pointerleave", leave);
+  })();
+
+  /* ---------- One-shot heading reveals ---------- */
   if (reduceMotion || !("IntersectionObserver" in window)) {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-in"));
   } else {
