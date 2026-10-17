@@ -173,11 +173,12 @@ function renderContact(data) {
         <p class="contact__meta mono" id="contact-meta">${esc(renderContactMeta(c))}</p>`;
 }
 
-const renderFoot = (data, year) =>
-  `© <span id="foot-year">${year}</span> ${esc(data.name)} · ${esc(data.contact.location)} · ${esc(data.contact.timezone)}`;
+// The year is filled in by app.js; baking it in would make the build stale every January.
+const renderFoot = (data) =>
+  `© <span id="foot-year"></span>${esc(data.name)} · ${esc(data.contact.location)} · ${esc(data.contact.timezone)}`;
 
 /* ---------- Everything, keyed by index.html marker name ---------- */
-export function renderSections(data, site, year = new Date().getFullYear()) {
+export function renderSections(data, site) {
   return {
     head: renderHead(data, site),
     "nav-status": esc(data.status),
@@ -191,6 +192,6 @@ export function renderSections(data, site, year = new Date().getFullYear()) {
     education: renderList(data.education),
     certs: renderList(data.certs),
     contact: renderContact(data),
-    foot: renderFoot(data, year),
+    foot: renderFoot(data),
   };
 }

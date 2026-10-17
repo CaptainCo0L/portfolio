@@ -90,6 +90,12 @@ test("renderHead: og:image and canonical", () => {
   assert.match(html, /rel="canonical" href="https:\/\/captainco0l\.github\.io\/portfolio\/"/);
 });
 
+test("footer has no build-time year, so the build output never goes stale on Jan 1", () => {
+  const foot = renderSections(DATA, SITE).foot;
+  assert.match(foot, /<span id="foot-year"><\/span>/);
+  assert.doesNotMatch(foot, /\d{4}/);
+});
+
 test("renderSections returns every marker", () => {
   const keys = Object.keys(renderSections(DATA, SITE)).sort();
   assert.deepEqual(keys, [
