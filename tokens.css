@@ -24,6 +24,7 @@
   --material:     rgba(255, 255, 255, 0.72);  /* translucent nav */
   --focus:        #0071e3;
   --ok:           #34c759;  /* "open to roles" dot */
+  --glow-strength: 8%;     /* hero backdrop peak; tested so hero text keeps 4.5:1 on it */
 
   /* Type — system first, no web fonts */
   --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
@@ -84,5 +85,6 @@
     --material:     rgba(22, 22, 23, 0.8);
     --focus:        #2997ff;
     --ok:           #30d158;
+    --glow-strength: 18%;
   }
 }

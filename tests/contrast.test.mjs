@@ -42,3 +42,24 @@ for (const [mode, tokens] of [["light", light], ["dark", dark]]) {
     });
   }
 }
+
+// The hero glow: --accent at --glow-strength over --bg is the darkest/brightest spot any hero
+// text can sit on. Every hero text colour must still clear 4.5:1 there.
+const pct = (block) => Number(block.match(/--glow-strength:\s*(\d+(?:\.\d+)?)%/)?.[1]);
+const glowStrength = { light: pct(lightBlock), dark: pct(darkBlock) || pct(lightBlock) };
+const mix = (fg, bg, a) => "#" + [1, 3, 5].map((i) => {
+  const f = parseInt(fg.slice(i, i + 2), 16), b = parseInt(bg.slice(i, i + 2), 16);
+  return Math.round(f * a + b * (1 - a)).toString(16).padStart(2, "0");
+}).join("");
+
+for (const [mode, tokens] of [["light", light], ["dark", dark]]) {
+  for (const fg of ["--label", "--label-2", "--link"]) {
+    test(`${mode}: ${fg} over the hero glow ≥ 4.5:1`, () => {
+      const a = glowStrength[mode] / 100;
+      assert.ok(a > 0 && a <= 1, `--glow-strength missing for ${mode}`);
+      const glow = mix(tokens["--accent"], tokens["--bg"], a);
+      const r = ratio(tokens[fg], glow);
+      assert.ok(r >= 4.5, `${fg} on glow ${glow} is ${r.toFixed(2)}:1`);
+    });
+  }
+}

@@ -91,6 +91,7 @@ Tokens unchanged (`--ease-out`, `--dur-*`). Only these move:
 | Section-heading **scroll reveal** | Preventing a jarring change · once per section | `.head` only: opacity + `translateY(8px)`, 400ms `--ease-out`, under `.js`. |
 | Light ↔ dark switch | Preventing a jarring change · rare | `body` `background-color`/`color` 300ms `ease`. |
 | Anchor scroll | Spatial consistency | `scroll-behavior: smooth` (existing). |
+| **Hero backdrop** (scroll-driven fade/drift) — added 2026-10-17 at owner request | Spatial consistency (the intro dissolves into the story) · continuous while scrolling the first screen | Hero-only glow in the timeline colours; `animation-timeline: scroll(root)`, range 0–80vh, `linear`; opacity 1→0, `translateY(-12%) scale(1.08)`; CSS only, compositor properties only. Full-page moving background rejected (frequency, function, vestibular — apple-design §14). Reduced motion: static glow. More contrast: no glow. Reduced transparency keeps it (a tint, not a see-through surface — corrected 2026-10-17 after finding Windows' "Transparency effects: off" maps to this query). |
 
 **Rejected (gate):** scroll-drawn timeline line (function — it's what people read alongside; also frequency);
 staggered stage entrances (function — delays reading); illustration idle animation (purpose — none; ambient motion

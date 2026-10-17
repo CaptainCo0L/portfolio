@@ -40,6 +40,8 @@ test("every hidden-until-JS state in styles.css is scoped under .js", () => {
     for (const s of selector.split(",").map((x) => x.trim())) {
       // A popover's closed/entry state is UA-hidden either way and opens natively without JS.
       if (/:popover-open\b/.test(s)) continue;
+      // Keyframe steps (from/to/NN%) aren't selectors; they hide nothing on their own.
+      if (/^(from|to|\d+(\.\d+)?%)$/.test(s)) continue;
       assert.match(s, /^\.js /, `"${s}" hides content without JS`);
     }
   }

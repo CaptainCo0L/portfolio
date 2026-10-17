@@ -66,3 +66,17 @@ test("long unbreakable words (URLs, tags) wrap instead of widening the page", ()
   assert.match(css, /(^|[}\s])body\s*\{[^}]*overflow-wrap:\s*break-word/m);
   assert.match(css, /\.tags li\s*\{[^}]*overflow-wrap:\s*anywhere/);
 });
+
+test("hero glow: decorative, scroll-linked only where supported and wanted, gone when it would hurt", () => {
+  assert.match(html, /<div class="hero__glow" aria-hidden="true"><\/div>/);
+  // Scroll-driven motion lives inside both gates
+  const gated = css.match(/@supports\s*\(animation-timeline:\s*scroll\(\)\)\s*\{[\s\S]*?prefers-reduced-motion:\s*no-preference[\s\S]*?animation-timeline:\s*scroll\(root\)/);
+  assert.ok(gated, "animation-timeline: scroll(root) inside @supports + no-preference");
+  assert.doesNotMatch(withoutFinePointerBlocks(css).replace(/@supports[\s\S]*$/, ""), /animation-timeline/, "no ungated scroll timeline before the @supports block");
+  // Increased contrast removes it; reduced transparency keeps it — it's a background tint, not a
+  // see-through surface (Windows users with transparency effects off would otherwise never see it).
+  const contrast = css.match(/@media\s*\(prefers-contrast:\s*more\)\s*\{([\s\S]*?)\n\}/)?.[1];
+  assert.match(contrast, /\.hero__glow\s*\{[^}]*display:\s*none/);
+  const transparency = css.match(/@media\s*\(prefers-reduced-transparency:\s*reduce\)\s*\{([\s\S]*?)\n\}/)?.[1];
+  assert.doesNotMatch(transparency, /\.hero__glow/);
+});

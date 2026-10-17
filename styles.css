@@ -170,7 +170,29 @@ ul, ol { list-style: none; padding: 0; }
 }
 
 /* ---------- Hero ---------- */
-.hero { padding-top: clamp(var(--space-2xl), 8vw, var(--space-4xl)); }
+.hero {
+  position: relative;
+  isolation: isolate;          /* the glow sits behind the hero's text, nothing else */
+  overflow-x: clip;
+  padding-top: clamp(var(--space-2xl), 8vw, var(--space-4xl));
+}
+
+/* The backdrop: the timeline's two colours as one soft light — grey to the left,
+   blue up and to the right — reaching up behind the translucent nav. Peak
+   strength is a token so the contrast test can check text on its brightest spot. */
+.hero__glow {
+  position: absolute;
+  inset: -80px 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 60% at 80% 22%, color-mix(in srgb, var(--accent) var(--glow-strength), transparent), transparent 72%),
+    radial-gradient(45% 55% at 12% 75%, color-mix(in srgb, var(--accent) calc(var(--glow-strength) * 0.5), transparent), transparent 70%);
+  transform-origin: 70% 0;
+  /* Fade out before the box ends, so there's never a visible edge under the intro */
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+}
 
 .hero__headline {
   font-size: var(--text-hero);
@@ -510,6 +532,23 @@ body { transition: background-color 300ms ease, color 300ms ease; }
   .numbers:popover-open { opacity: 0; transform: scale(0.97); }
 }
 
+/* Hero backdrop: as you scroll the first screen, the glow fades, rises and opens up,
+   so the intro dissolves into the story. Scroll-linked (it reverses exactly when you
+   scroll back), linear because it tracks input, compositor-only properties. Browsers
+   without scroll timelines, and reduced motion, keep the static glow. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__glow {
+      animation: glow-out linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 80vh;
+    }
+  }
+}
+@keyframes glow-out {
+  to { opacity: 0; transform: translateY(-12%) scale(1.08); }
+}
+
 /* The stage being read */
 .stage__node { transition: background-color 200ms ease, border-color 200ms ease; }
 
@@ -537,6 +576,7 @@ body { transition: background-color 300ms ease, color 300ms ease; }
 
 /* Firmer edges and stronger secondary text */
 @media (prefers-contrast: more) {
+  .hero__glow { display: none; }
   :root { --label-2: var(--label); --label-3: var(--label); --separator: currentColor; }
   .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: 1px solid var(--label); }
   .case, .off__item, .numbers, .chip, .tags li { border: 1px solid var(--label); }

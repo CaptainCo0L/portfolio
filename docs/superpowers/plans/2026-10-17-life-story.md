@@ -156,3 +156,21 @@ Write `docs/qa/2026-10-17-after-audit.md` with a SHIP / SHIP WITH FIXES / DO NOT
 - [ ] README: the new data shape (stages, numbers, offClock), how to add a stage, the edit loop (edit `data.js` → `node build/build.mjs` → commit), and tests/CI. Vault note + `log.md` line. Close the theme plan's ledger as superseded.
 - [ ] `node --test "tests/*.test.mjs"` and `node build/build.mjs --check`. Expected: green.
 - [ ] **Ask the owner** before merging or pushing. On yes: `git merge-base --is-ancestor origin/main HEAD`, then `git push origin HEAD:main`. Poll the live URL for `The story so far` (with a cache-buster) until it's present, check the CI run, then check the LinkedIn Post Inspector preview.
+
+### Task 10: Hero backdrop that reacts to scroll (owner request, after review)
+
+**Files:** `index.html` (glow element in `.hero`), `tokens.css` (`--glow-strength`), `styles.css`, `tests/contrast.test.mjs`, `tests/mobile.test.mjs`, `tests/build.test.mjs`
+
+Design-spec §5 row "Hero backdrop": a soft two-colour glow (grey → blue, the timeline's colours) behind the hero
+only, extending up behind the translucent nav. Scroll-linked (`animation-timeline: scroll(root)`, range 0–80vh,
+`linear` — constant motion tied to input): opacity 1→0, `translateY(-12%) scale(1.08)`. `transform`/`opacity`
+only (no animated blur). Pure CSS inside `@supports (animation-timeline: scroll())` and
+`@media (prefers-reduced-motion: no-preference)`; unsupported browsers and reduced motion get the static glow;
+increased contrast removes it (reduced transparency keeps it — see spec).
+
+- [ ] Tests first: glow-composite contrast (`--label`, `--label-2`, `--link` over `--accent` at `--glow-strength`
+  on `--bg` ≥ 4.5 in both modes); glow element `aria-hidden`; scroll animation gated by `@supports` + no-preference;
+  glow hidden under increased contrast, kept under reduced transparency.
+- [ ] Implement; probe: opacity 1 at top, < 0.5 at 60vh, static under reduced motion; no horizontal overflow; axe
+  clean with the glow; screenshots light/dark.
+- [ ] Commit.
