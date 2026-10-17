@@ -462,17 +462,54 @@ ul, ol { list-style: none; padding: 0; }
 }
 .foot p { font-size: var(--text-xs); }
 
-/* ---------- Reveals ---------- */
-.js .reveal { opacity: 0; transform: translateY(12px); }
-.js .reveal.is-in {
-  opacity: 1; transform: none;
-  transition: opacity var(--dur-long) var(--ease-out),
-              transform var(--dur-long) var(--ease-out);
+/* ---------- Motion ----------
+   Everything that moves lives here (design spec §5). transform/opacity, plus
+   colour on small elements; the repo's --ease-out; nothing over 400ms.     */
+
+/* Light ↔ dark: ease the switch instead of flashing */
+body { transition: background-color 300ms ease, color 300ms ease; }
+
+/* Press feedback, on press — not on release */
+.btn {
+  transition: background-color var(--dur-micro) ease, border-color var(--dur-micro) ease,
+              color var(--dur-micro) ease, transform var(--dur-press) var(--ease-out);
+}
+.chip {
+  transition: background-color var(--dur-micro) ease, transform var(--dur-press) var(--ease-out);
+}
+.btn:active, .chip:active { transform: scale(0.97); }
+.nav__links a { transition: color var(--dur-micro) ease; }
+
+/* "By the numbers": scales in from the chip (app.js sets transform-origin
+   to the chip's side) and leaves the same way. allow-discrete keeps it
+   visible while display/overlay flip, so the exit actually plays. */
+.numbers {
+  transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out),
+              overlay 180ms var(--ease-out) allow-discrete, display 180ms var(--ease-out) allow-discrete;
+}
+.numbers:not(:popover-open) { opacity: 0; transform: scale(0.97); transition-duration: 120ms; }
+@starting-style {
+  .numbers:popover-open { opacity: 0; transform: scale(0.97); }
 }
 
+/* The stage being read */
+.stage__node { transition: background-color 200ms ease, border-color 200ms ease; }
+
+/* Section headings: one gentle reveal, only when JS is there to undo it */
+.js .reveal { opacity: 0; transform: translateY(8px); }
+.js .reveal.is-in {
+  opacity: 1; transform: none;
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+}
+
+/* Reduced motion: fewer and gentler, not nothing — fades stay, movement goes */
 @media (prefers-reduced-motion: reduce) {
-  .js .reveal, .js .reveal.is-in { opacity: 1; transform: none; transition: none; }
-  .btn, .quiet { transition: none; }
+  .btn:active, .chip:active { transform: none; }
+  .numbers, .numbers:not(:popover-open) { transform: none; }
+  @starting-style { .numbers:popover-open { transform: none; } }
+  .stage__node { transition: none; }
+  .js .reveal { transform: none; }
+  .js .reveal.is-in { transition: opacity 200ms ease; }
 }
 
 /* Solid nav instead of a translucent one */

@@ -38,6 +38,8 @@ test("every hidden-until-JS state in styles.css is scoped under .js", () => {
   assert.ok(hiding.length > 0, "expected some hidden states to check");
   for (const [, selector] of hiding) {
     for (const s of selector.split(",").map((x) => x.trim())) {
+      // A popover's closed/entry state is UA-hidden either way and opens natively without JS.
+      if (/:popover-open\b/.test(s)) continue;
       assert.match(s, /^\.js /, `"${s}" hides content without JS`);
     }
   }
