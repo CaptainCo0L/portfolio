@@ -20,9 +20,11 @@ const MARKER = /<!-- @build:([\w-]+) -->[\s\S]*?<!-- @end:\1 -->/g;
 
 const lf = (s) => s.replace(/\r\n/g, "\n");
 
-/* data.js is a plain browser script (`const DATA = {…}`), so evaluate it in a sandbox. */
+/* data.js is a plain browser script (`const DATA = {…}`), so evaluate it in a sandbox.
+   structuredClone brings the result into this realm (sandbox arrays have a different
+   Array prototype, which trips strict equality checks). */
 export function loadData(path = fileURLToPath(new URL("data.js", ROOT))) {
-  return vm.runInNewContext(readFileSync(path, "utf8") + "\n;DATA");
+  return structuredClone(vm.runInNewContext(readFileSync(path, "utf8") + "\n;DATA"));
 }
 
 export function applyMarkers(html, sections) {
