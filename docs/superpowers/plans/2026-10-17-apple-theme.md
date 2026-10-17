@@ -1,5 +1,7 @@
 # Apple Light + Dark Theme (Prerendered) Implementation Plan
 
+> **Status 2026-10-17:** Tasks 1–8 done (`3e66365..f9a0883`). Tasks 9–13 **superseded** by `2026-10-17-life-story.md` after the owner repositioned the site as a life-stages summary.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Re-theme the portfolio to an Apple-style light + dark design and prerender all content into `index.html`, so recruiters, link previews and scrapers see the full page.
