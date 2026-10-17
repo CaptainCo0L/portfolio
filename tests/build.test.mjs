@@ -74,3 +74,17 @@ test("the built index.html carries the content without JavaScript", () => {
   for (const pr of data.projects) assert.ok(html.includes(pr.title.replace(/&/g, "&amp;")), `project ${pr.title}`);
   assert.match(html, /<dt>3<small>yrs<\/small><\/dt>/, "numbers are in the HTML even though they sit in a popover");
 });
+
+test("og.png is a 1200×630 PNG under 300 KB (link previews)", () => {
+  const png = readFileSync(new URL("../assets/og.png", import.meta.url));
+  assert.equal(png.subarray(1, 4).toString(), "PNG");
+  assert.equal(png.readUInt32BE(16), 1200, "width");
+  assert.equal(png.readUInt32BE(20), 630, "height");
+  assert.ok(png.length < 300 * 1024, `${png.length} bytes`);
+});
+
+test("the JSON-LD in the built page parses", () => {
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const ld = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+  assert.equal(ld["@type"], "Person");
+});

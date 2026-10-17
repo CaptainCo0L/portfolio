@@ -7,7 +7,7 @@
 // that is JSON-serialisable. Exits 1 if the result contains `"ok":false`.
 
 import { spawn } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -20,6 +20,7 @@ const url = arg("--url", "http://localhost:8000/");
 const width = Number(arg("--width", "1440"));
 const height = Number(arg("--height", "900"));
 const media = arg("--media", ""); // e.g. "prefers-reduced-motion=reduce"
+const shot = arg("--shot", "");   // optional: save a PNG of the viewport after the checks
 const file = process.argv[process.argv.length - 1];
 
 const port = 9334;
@@ -79,6 +80,10 @@ try {
   if (exceptionDetails) throw new Error(exceptionDetails.exception?.description || exceptionDetails.text);
   const out = JSON.stringify(result.value, null, 2);
   console.log(out);
+  if (shot) {
+    const png = await send("Page.captureScreenshot", { format: "png" });
+    writeFileSync(shot, Buffer.from(png.data, "base64"));
+  }
   failed = out.includes('"ok": false');
 } finally {
   ws.close();
