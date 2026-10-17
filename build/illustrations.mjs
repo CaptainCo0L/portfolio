@@ -25,11 +25,13 @@ export const ILLUSTRATIONS = {
     `<path d="M12 7.5h4.5M12 16.5h4.5"/>` +
     `<circle class="accent" cx="7.5" cy="7.5" r=".9"/><circle class="accent" cx="7.5" cy="16.5" r=".9"/>`
   ),
-  // Acoustic guitar: round body, sound hole, neck and head.
+  // Acoustic guitar along the diagonal: the body outline is the union of a lower
+  // bout (r 4.5 at 7.5,16.5) and an upper bout (r 3.2 at 11.5,12.5), joined where
+  // they intersect; then sound hole, bridge, neck and head.
   guitar: svg(
-    `<circle cx="8.5" cy="15.5" r="5"/>` +
-    `<circle class="accent" cx="8.5" cy="15.5" r="1.4"/>` +
-    `<path d="M12 12l7-7M17.6 3.6l2.8 2.8M6.4 17.6l2.1-2.1"/>`
+    `<path d="M8.33 12.08A4.5 4.5 0 1 0 11.92 15.67A3.2 3.2 0 1 0 8.33 12.08z"/>` +
+    `<circle class="accent" cx="8.6" cy="15.4" r="1.2"/>` +
+    `<path d="M5.4 17.1l1.5 1.5M13.8 10.2L19 5M17.8 3.8l2.4 2.4"/>`
   ),
   // Ringed planet and a small star.
   planet: svg(
