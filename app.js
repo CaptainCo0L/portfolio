@@ -64,22 +64,46 @@
       timer = setTimeout(fn, ms);
     };
 
-    // Below the chip, left-aligned, kept 16px inside the viewport.
-    pop.addEventListener("toggle", (e) => {
-      if (e.newState !== "open") {
-        openedBy = null;
-        return;
-      }
+    // Below the chip (above it if there's no room), left-aligned, kept 16px inside
+    // the viewport. The popover is position: fixed, so it's re-placed while the page
+    // scrolls — otherwise it would float over other sections.
+    function place() {
       const c = chip.getBoundingClientRect();
+      const vw = document.documentElement.clientWidth;
+      const vh = window.innerHeight;
+      // Chip scrolled out of view: close rather than float over another section.
+      if (c.bottom < 0 || c.top > vh) return pop.hidePopover();
       const w = pop.offsetWidth;
-      const left = Math.min(Math.max(c.left, 16), window.innerWidth - w - 16);
+      const h = pop.offsetHeight;
+      const left = Math.min(Math.max(c.left, 16), vw - w - 16);
+      const below = c.bottom + 8;
+      const above = c.top - 8 - h;
+      const flip = below + h > vh - 16 && above >= 16;
+      const top = Math.min(Math.max(flip ? above : below, 16), vh - h - 16);
       // The UA centres popovers (inset: 0; margin: auto); without JS that default stays.
       pop.style.inset = "auto";
       pop.style.margin = "0";
       pop.style.left = left + "px";
-      pop.style.top = c.bottom + 8 + "px";
-      // Grow from the corner nearest the chip.
-      pop.style.transformOrigin = `${Math.round(c.left + c.width / 2 - left)}px 0`;
+      pop.style.top = top + "px";
+      // Grow from the chip's side: top edge when below it, bottom edge when above.
+      pop.style.transformOrigin = `${Math.round(c.left + c.width / 2 - left)}px ${flip ? "100%" : "0"}`;
+    }
+    let frame = 0;
+    const follow = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(place);
+    };
+
+    pop.addEventListener("toggle", (e) => {
+      if (e.newState !== "open") {
+        openedBy = null;
+        window.removeEventListener("scroll", follow);
+        window.removeEventListener("resize", follow);
+        return;
+      }
+      place();
+      window.addEventListener("scroll", follow, { passive: true });
+      window.addEventListener("resize", follow, { passive: true });
     });
 
     chip.addEventListener("click", (e) => {

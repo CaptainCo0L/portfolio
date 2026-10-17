@@ -55,7 +55,7 @@ const DATA = {
       id: "aspire",
       years: "2022 – 2026",
       title: "Aspire Systems",
-      place: "Trainee → QA automation engineer",
+      place: "Trainee → Associate Software Engineer",
       turn: true,
       numbers: true,
       body: [
@@ -68,7 +68,7 @@ const DATA = {
       id: "pause",
       years: "Jan – Jun 2026",
       title: "The pause",
-      place: "A reset",
+      place: "",
       body: [
         "After Aspire I stepped away. Mostly a detox: clearing my head and getting ready for security training.",
       ],

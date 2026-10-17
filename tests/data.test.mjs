@@ -45,3 +45,9 @@ test("the hiring-page fields are gone", () => {
   assert.equal(DATA.stats, undefined);
   assert.equal(DATA.contactHeading, "Say hello.");
 });
+
+test("role lines are sourced: Aspire uses the CV title; no invented subtitle on the pause", () => {
+  const byId = Object.fromEntries(DATA.stages.map((s) => [s.id, s]));
+  assert.equal(byId.aspire.place, "Trainee → Associate Software Engineer");
+  assert.equal(byId.pause.place, "");
+});
