@@ -1,51 +1,65 @@
-# Aswin Sunil — portfolio
+# Aswin Sunil — the story so far
 
-A single-page static portfolio. No build step, no dependencies.
+A one-page, static portfolio: a vertical timeline of life stages, an "Off the clock" section, and the
+recruiter essentials (fieldwork, toolbox, CV, email). Apple-style light + dark theme that follows the
+visitor's system setting. No runtime dependencies, no web fonts.
 
 ## Editing content
 
-**Everything on the page lives in [`data.js`](data.js).** Open it, change a value, save, refresh the browser.
-
-- **Add a project** → add an object to the `projects` array (there's a commented example in place).
-- **Add a skill row / cert / education line** → append to `skills`, `certs`, or `education`.
-- **Change the headline, stats, phases, contact info** → edit the matching field at the top.
-- The stat figures come from the CV — keep them real.
-
-### The signal band
-
-The hero trace is generated from `phases`. Each phase carries two extra fields:
-
-- `flag: true` draws a tall amber bar (a turn in the story); `false` draws a shorter mint one (steady baseline work). The same distinction labels the entry in the record below.
-- `mark:` is where it sits on the band, `0` (far left) to `1` (far right).
-
-Add a phase and a new bar appears; clicking it scrolls to that entry.
-
-## CV download
-
-Drop your CV PDF at `assets/Aswin-Sunil-CV.pdf` (or change `contact.cv` in `data.js` to another path/URL).
-
-## Preview locally
-
-Just open `index.html` in a browser. Or serve it:
+**Everything on the page lives in [`data.js`](data.js).** After editing it, rebuild:
 
 ```
-npx serve .
+node build/build.mjs
 ```
 
-## Deploy (GitHub Pages)
+That writes the content into `index.html` (between `<!-- @build:… -->` markers), so the page works without
+JavaScript and link previews / job-site scrapers see the real text. Commit both `data.js` and `index.html`.
+CI fails if you forget to rebuild.
 
-1. Create a repo (e.g. `aswin-portfolio`), push these files.
-2. Repo → Settings → Pages → Source: `main` branch, `/ (root)`.
-3. Site appears at `https://<username>.github.io/aswin-portfolio/`.
+- **Add a life stage** → add an object to `stages` (oldest first). `turn: true` marks a turning point (blue
+  node, and the line is blue from the first one onward); `future: true` is for what hasn't happened yet;
+  `body` is a list of paragraphs; `tags` and `link` are optional.
+- **"By the numbers"** → the `numbers` list, shown in a popover on the stage with `numbers: true`.
+- **Off the clock** → `offClock`; `icon` is one of `football · controller · server · guitar · planet ·
+  dumbbell · mountain · speech` (line drawings in `build/illustrations.mjs`).
+- **Fieldwork / toolbox / certs / education** → `projects`, `skills`, `certs`, `education`.
+- Keep it true: figures come from the CV; no family details, no location finer than the city.
 
-Netlify/Vercel also work — point them at the folder, no build command.
+## Checks
+
+```
+node --test "tests/*.test.mjs"     # render, data, contrast, mobile-layer and build tests
+node build/build.mjs --check       # index.html is up to date
+```
+
+Both run in GitHub Actions (`.github/workflows/check-build.yml`) on every push.
+
+For visual and behaviour checks (needs Chrome and a local server, `python -m http.server 8000`):
+
+```
+node scripts/shoot.mjs --url http://localhost:8000/ --out qa/now     # 375/768/1440 × light/dark screenshots
+node scripts/probe.mjs --width 375 path/to/check.js                  # run a check script in the page
+```
+
+`qa/` is git-ignored. The link-preview image `assets/og.png` is rendered from `build/og-card.html`
+(command in that file's header).
+
+## Preview / deploy
+
+Preview: `python -m http.server 8000` and open http://localhost:8000/ (opening `index.html` as a file works too).
+
+Deploy: GitHub Pages serves `main` from the repo root — https://captainco0l.github.io/portfolio/.
+Asset URLs carry a content hash (`styles.css?v=…`), so a deploy never pairs new HTML with cached old CSS/JS.
 
 ## Files
 
 | File | What it is |
 |------|------------|
 | `data.js` | **All content — edit this one** |
-| `index.html` | Page structure |
-| `styles.css` | Design (Baseline & Anomaly) |
-| `tokens.css` | Design tokens (colours, type, spacing) |
-| `app.js` | Rendering + the signal band (rarely needs edits) |
+| `index.html` | Page shell + generated content (rebuild after editing `data.js`) |
+| `tokens.css` / `styles.css` | Design tokens (light + dark) / styles |
+| `app.js` | Enhancement only: current stage, popover hover + placement, nav marker, reveals |
+| `build/` | `build.mjs` (writes index.html), `render.mjs`, `illustrations.mjs`, `og-card.html` |
+| `tests/` | `node:test` suites |
+| `scripts/` | `shoot.mjs` (screenshots), `probe.mjs` (in-page checks) |
+| `docs/` | Specs, plans, QA audits; `docs/superpowers/plans/future-dynamic-upgrade.md` for what's next |
