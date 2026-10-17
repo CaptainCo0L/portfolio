@@ -34,6 +34,29 @@
     });
   })();
 
+  /* ---------- Nav: mark the section in view ---------- */
+  if ("IntersectionObserver" in window) {
+    const links = new Map(
+      [...document.querySelectorAll('.nav__links a[href^="#"]')].map((a) => [a.hash.slice(1), a])
+    );
+    const spy = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          const link = links.get(en.target.id);
+          if (en.isIntersecting) {
+            links.forEach((a) => a.removeAttribute("aria-current"));
+            link.setAttribute("aria-current", "location");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+      },
+      // A thin band across the middle of the viewport: at most one section is "in view".
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    links.forEach((_, id) => spy.observe(document.getElementById(id)));
+  }
+
   /* ---------- One-shot reveals ---------- */
   if (reduceMotion || !("IntersectionObserver" in window)) {
     document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-in"));

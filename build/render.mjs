@@ -170,7 +170,7 @@ function renderContact(data) {
           <a class="btn btn--ghost" id="contact-cv" href="${esc(c.cv)}" download>Download CV</a>
           <a class="quiet" id="contact-linkedin" href="${esc(c.linkedin)}" rel="me noopener" target="_blank">LinkedIn</a>
         </div>
-        <p class="contact__meta mono" id="contact-meta">${esc(renderContactMeta(c))}</p>`;
+        <p class="contact__meta caption" id="contact-meta">${esc(renderContactMeta(c))}</p>`;
 }
 
 // The year is filled in by app.js; baking it in would make the build stale every January.
