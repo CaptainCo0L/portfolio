@@ -121,7 +121,12 @@ export const renderProjects = (projects) =>
         <h3>${esc(pr.title)}</h3>
         <p>${esc(pr.body)}</p>
         ${tags(pr.tags)}
-        ${pr.link ? `<p style="margin-top:var(--space-md)"><a class="quiet" href="${esc(pr.link)}" target="_blank" rel="noopener">Read the write-up</a></p>` : ""}
+        ${pr.link || pr.report ? `<p class="case__links" style="margin-top:var(--space-md)">${
+          [
+            pr.link ? `<a class="quiet" href="${esc(pr.link)}" target="_blank" rel="noopener">Read the write-up</a>` : "",
+            pr.report ? `<a class="quiet" href="${esc(pr.report)}" target="_blank" rel="noopener">Report (PDF)</a>` : "",
+          ].filter(Boolean).join(`<span aria-hidden="true"> · </span>`)
+        }</p>` : ""}
       </article>`
     )
     .join("");

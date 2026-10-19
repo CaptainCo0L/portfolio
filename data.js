@@ -131,6 +131,15 @@ const DATA = {
       link: "",
     },
     {
+      title: "HF2019-Linux — full pen-test report",
+      org: "Home lab · Oct 2026",
+      body:
+        "One boot2root box written up end to end: anonymous FTP leaked wp-config.php, a wp-google-maps SQL injection gave up a password hash, and a cracked, reused password plus unrestricted sudo turned a web flaw into root. The walkthrough and a formal report lay out the chain — and the log evidence each step leaves behind.",
+      tags: ["WordPress", "SQL injection", "Credential reuse", "Privilege escalation"],
+      link: "https://medium.com/p/e8e2504acb8f",
+      report: "assets/HF2019-Linux-pentest-report.pdf",
+    },
+    {
       title: "Boot2root machines — 6 rooted",
       org: "Home lab · Jul–Aug 2026",
       body:

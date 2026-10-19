@@ -94,6 +94,15 @@ test("renderProjects: write-up link only when link is set", () => {
   assert.match(linked, /rel="noopener"/);
 });
 
+test("renderProjects: optional report link renders alongside the write-up", () => {
+  const base = { title: "T", org: "O", body: "B", tags: ["x"] };
+  assert.doesNotMatch(renderProjects([{ ...base, report: "" }]), /Report \(PDF\)/);
+  const both = renderProjects([{ ...base, link: "https://x", report: "assets/r.pdf" }]);
+  assert.match(both, /Read the write-up/);
+  assert.match(both, /Report \(PDF\)/);
+  assert.match(both, /href="assets\/r\.pdf"/);
+});
+
 test("renderContactMeta omits a missing phone without a dangling separator", () => {
   assert.equal(renderContactMeta({ email: "a@b.c", location: "Here", timezone: "IST" }), "a@b.c · Here (IST)");
 });
