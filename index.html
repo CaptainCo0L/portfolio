@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
   <script>document.documentElement.classList.add("js");try{if(localStorage.getItem("aurora")==="paused")document.documentElement.classList.add("aurora-paused")}catch(e){}</script>
   <!-- @build:styles --><link rel="stylesheet" href="tokens.css?v=0bc6d2f9a9" />
-  <link rel="stylesheet" href="styles.css?v=163f7becbd" /><!-- @end:styles -->
+  <link rel="stylesheet" href="styles.css?v=d3e566fbad" /><!-- @end:styles -->
 </head>
 <body>
   <div class="backdrop" aria-hidden="true">
@@ -43,6 +43,11 @@
         <a href="#fieldwork">Fieldwork</a>
         <a href="#toolbox">Toolbox</a>
       </nav>
+      <button class="motion-toggle" type="button" aria-pressed="false" hidden title="Pause background">
+        <svg class="motion-toggle__pause" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1.5" width="2.6" height="9" rx="0.6"/><rect x="7.4" y="1.5" width="2.6" height="9" rx="0.6"/></svg>
+        <svg class="motion-toggle__play" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L3.9 1.1a.6.6 0 0 0-.9.5z"/></svg>
+        <span class="sr-only">Pause background</span>
+      </button>
       <a class="btn btn--sm nav__cta" id="nav-email" href="#contact">Email me</a>
     </div>
   </header>
@@ -299,7 +304,6 @@
   </footer>
 
 
-  <button class="motion-toggle" type="button" aria-pressed="false" hidden>Pause background</button>
 
   <!-- @build:script --><script src="app.js?v=23bd5d35ec"></script><!-- @end:script -->
 </body>

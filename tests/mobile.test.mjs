@@ -90,7 +90,11 @@ test("aurora backdrop: decorative, three layers, motion only where supported and
 });
 
 test("pause toggle: a real button, hidden until JS shows it, saved choice applied before paint", () => {
-  assert.match(html, /<button class="motion-toggle" type="button" aria-pressed="false" hidden>/);
+  assert.match(html, /<button class="motion-toggle" type="button" aria-pressed="false" hidden[ >]/);
+  // Lives in the sticky nav, not floating over body text (it covered copy on a 411px Pixel)
+  const nav = html.slice(html.indexOf('<header class="nav">'), html.indexOf("</header>"));
+  assert.match(nav, /<button class="motion-toggle"[\s\S]*?<span class="sr-only">Pause background<\/span>[\s\S]*?<\/button>\s*<a class="btn btn--sm nav__cta"/);
+  assert.doesNotMatch(css.match(/\.motion-toggle\s*\{[^}]*\}/)[0], /position:\s*fixed/);
   const head = html.slice(0, html.indexOf("</head>"));
   assert.match(head, /localStorage\.getItem\("aurora"\)\s*===\s*"paused"/);
   assert.match(head, /classList\.add\("aurora-paused"\)/);

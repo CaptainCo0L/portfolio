@@ -89,5 +89,7 @@ localabstract:chrome_devtools_remote`), site served through `adb reverse tcp:800
   `rgb(13,15,10)` dark, against page `#fff` / `#000`. Close, and not ours to control
 - [x] Press feedback: quick tap → scale starts ~15ms after pointerdown, reaches .97 by ~130ms, springs back by ~275ms.
   On a held press Chrome waits ~100ms (its show-press timeout, to rule out a scroll) before `:active` applies
-- [ ] **Found: the fixed "Pause background" pill covers body text** at the bottom-right of a 411px screen
-  (e.g. "Testing felt like the step be…") — fix pending
+- [x] **Found: the fixed "Pause background" pill covered body text** at the bottom-right of a 411px screen
+  (e.g. "Testing felt like the step be…"). Fixed 2026-10-19: now a 32px icon button in the sticky nav, before
+  "Email me" (owner's pick over a footer link or an icon-only float). Re-tested by real tap on the Pixel: pauses all six
+  aurora animations, `aria-pressed` flips, name stays "Pause background", no overflow at 411px
