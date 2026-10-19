@@ -74,13 +74,20 @@ Verdict: the page needs no more motion.
 `qa/final/evidence.json` → `check-evidence.js`: *"Evidence record complete"*. (The checker validates the record,
 not the truth of the observations — those are the probes and screenshots above.)
 
-## Owner's real-phone checklist (pending — can't be verified from a desktop)
-Serve on the LAN: `python -m http.server 8000 --bind 0.0.0.0`, find the PC's IP with `ipconfig`, open
-`http://<ip>:8000/` on the phone.
-- [ ] No grey flash when tapping a button, the chip, or a nav link
-- [ ] No hover state stuck after a tap
-- [ ] "By the numbers" opens and closes by tap; tapping outside closes it
-- [ ] Long-press on a button or the chip doesn't select its text
-- [ ] Landscape on a notched iPhone: text clears the notch
-- [ ] Status bar colour matches the page in light and dark
-- [ ] Press feedback feels immediate; popover feels like it grows from the chip
+## Real-phone checklist — run 2026-10-19 on a Pixel 6 Pro (Android, Chrome, 411×794 CSS px, DPR 3.5)
+Real touch input via `adb shell input` (tap / motionevent), page state read over CDP (`adb forward tcp:9222
+localabstract:chrome_devtools_remote`), site served through `adb reverse tcp:8000 tcp:8000`.
+- [x] No grey flash when tapping — `-webkit-tap-highlight-color` transparent on every control; screenshot 300ms into a
+  held press on the chip shows no overlay
+- [x] No hover state stuck after a tap — chip colours identical before/after; `:hover` false after tapping elsewhere
+- [x] "By the numbers" opens on a real tap, closes on a tap outside; panel 43–395px in a 411px viewport (16px clear)
+- [x] Long-press on the chip / CV button selects no text. A long-press on a *link* opens Chrome's native link menu
+  (open in new tab, copy link…) — expected and useful, left alone
+- [~] Landscape cutout: on Android Chrome letterboxes the punch-hole, insets are 0 and content clears it. **The notched
+  iPhone case is still untested** — iOS Safari draws into the notch area, which a Pixel can't reproduce
+- [x] Status bar: Chrome Android ignores `theme-color` in a normal tab and uses its own tint — `rgb(250,250,240)` light,
+  `rgb(13,15,10)` dark, against page `#fff` / `#000`. Close, and not ours to control
+- [x] Press feedback: quick tap → scale starts ~15ms after pointerdown, reaches .97 by ~130ms, springs back by ~275ms.
+  On a held press Chrome waits ~100ms (its show-press timeout, to rule out a scroll) before `:active` applies
+- [ ] **Found: the fixed "Pause background" pill covers body text** at the bottom-right of a 411px screen
+  (e.g. "Testing felt like the step be…") — fix pending
