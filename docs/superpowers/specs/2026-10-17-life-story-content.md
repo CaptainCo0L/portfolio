@@ -1,6 +1,6 @@
 # Life-story content — DRAFT for owner review
 
-Status: draft v2, 2026-10-17 — follow-up answers folded in. Nothing here ships until the owner approves it.
+Status: **approved 2026-10-19** — owner kept all [inferred] lines, the headline, "Say hello." and the music/cooking omission as written. (Draft v2, 2026-10-17.)
 Built only from the owner's answers (2026-10-17 interview) and facts already on the site.
 **[inferred]** marks a phrase that goes beyond what was said — keep, edit or cut.
 **[?]** marks a gap only the owner can fill.

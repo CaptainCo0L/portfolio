@@ -203,5 +203,5 @@ const DATA = {
   /* ---- Contact section ------------------------------------ */
   contactHeading: "Say hello.",
   contactBody:
-    "Email is the fastest way to reach me. Based in Ernakulam (IST) — open to on-site, hybrid and remote. For roles in Europe I need visa sponsorship, and I'd rather say that now than in week three.",
+    "Email is the fastest way to reach me. Based in Kochi (IST) — open to on-site, hybrid and remote. For roles in Europe I need visa sponsorship, and I'd rather say that now than in week three.",
 };
